@@ -11,6 +11,8 @@ public class FormController {
 
     @RequestMapping("/form")
     public ModelAndView process(@ModelAttribute("command") Command command, BindingResult result) {
-        return new ModelAndView("form", result.getModel());
+        ModelAndView mv = new ModelAndView("form", result.getModel());
+        mv.addObject("formAction", "/form");
+        return mv;
     }
 }
