@@ -35,7 +35,7 @@ public class WebStringTemplateGroup extends StringTemplateGroup {
     protected StringTemplate loadTemplate(String name, String fileName) {
         Resource resource = resourceLoader.getResource(fileName);
         if (!resource.exists()) {
-            return null;
+            throw new TemplateNotFoundException(fileName);
         }
         InputStream stream = null;
         BufferedReader reader = null;

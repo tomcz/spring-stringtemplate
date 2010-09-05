@@ -70,8 +70,8 @@ public class StringTemplateViewResolver implements ViewResolver, ResourceLoaderA
             WebStringTemplate tempate = createTemplate(viewName);
             return new StringTemplateView(tempate, servletContext, exposeBindStatus, contentType);
 
-        } catch (IllegalArgumentException e) {
-            return null; // template cannot be found
+        } catch (TemplateNotFoundException e) {
+            return null;
         }
     }
 
