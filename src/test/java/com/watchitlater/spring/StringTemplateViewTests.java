@@ -38,7 +38,7 @@ public class StringTemplateViewTests {
         MockHttpServletRequest request = new MockHttpServletRequest();
         ServletContext context = new MockServletContext();
 
-        StringTemplateView view = new StringTemplateView(template, context, false, "text/html");
+        StringTemplateView view = createTemplate(template, context, false, "text/html");
         view.render(model, request, response);
 
         verify(template).setAttribute(StringTemplateView.MODEL_KEY, model);
@@ -56,7 +56,7 @@ public class StringTemplateViewTests {
         MockHttpServletRequest request = new MockHttpServletRequest();
         ServletContext context = new MockServletContext();
 
-        StringTemplateView view = new StringTemplateView(template, context, false, "text/html");
+        StringTemplateView view = createTemplate(template, context, false, "text/html");
         view.render(model, request, response);
 
         verify(template).setAttribute("simpleProperty", "simple");
@@ -77,7 +77,7 @@ public class StringTemplateViewTests {
         request.setParameter("test", "value");
         request.setParameter("array", array);
 
-        StringTemplateView view = new StringTemplateView(template, context, false, "text/html");
+        StringTemplateView view = createTemplate(template, context, false, "text/html");
         view.render(model, request, response);
 
         verify(template).setAttribute(eq(StringTemplateView.PARAMS_KEY), argThat(hasEntry("test", "value")));
@@ -95,7 +95,7 @@ public class StringTemplateViewTests {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setAttribute("test", "value");
 
-        StringTemplateView view = new StringTemplateView(template, context, false, "text/html");
+        StringTemplateView view = createTemplate(template, context, false, "text/html");
         view.render(model, request, response);
 
         verify(template).setAttribute(eq(StringTemplateView.REQUEST_KEY), argThat(hasEntry("test", "value")));
@@ -110,7 +110,7 @@ public class StringTemplateViewTests {
         Map<String, Object> model = new HashMap<String, Object>();
         ServletContext context = new MockServletContext();
 
-        StringTemplateView view = new StringTemplateView(template, context, false, "text/html");
+        StringTemplateView view = createTemplate(template, context, false, "text/html");
         view.render(model, request, response);
 
         verify(template).setAttribute(StringTemplateView.SESSION_KEY, new HashMap());
@@ -130,7 +130,7 @@ public class StringTemplateViewTests {
         Map<String, Object> model = new HashMap<String, Object>();
         ServletContext context = new MockServletContext();
 
-        StringTemplateView view = new StringTemplateView(template, context, false, "text/html");
+        StringTemplateView view = createTemplate(template, context, false, "text/html");
         view.render(model, request, response);
 
         verify(template).setAttribute(eq(StringTemplateView.SESSION_KEY), argThat(hasEntry("test", "value")));
@@ -147,7 +147,7 @@ public class StringTemplateViewTests {
         ServletContext context = new MockServletContext();
         context.setAttribute("test", "value");
 
-        StringTemplateView view = new StringTemplateView(template, context, false, "text/html");
+        StringTemplateView view = createTemplate(template, context, false, "text/html");
         view.render(model, request, response);
 
         verify(template).setAttribute(eq(StringTemplateView.APPLICATION_KEY), argThat(hasEntry("test", "value")));
@@ -164,7 +164,7 @@ public class StringTemplateViewTests {
 
         boolean exposeBindStatus = false;
 
-        StringTemplateView view = new StringTemplateView(template, context, exposeBindStatus, "text/html");
+        StringTemplateView view = createTemplate(template, context, exposeBindStatus, "text/html");
         view.render(model, request, response);
 
         verify(template, never()).setAttribute(eq(StringTemplateView.BIND_STATUS_KEY), anyObject());
@@ -184,7 +184,7 @@ public class StringTemplateViewTests {
 
         boolean exposeBindStatus = true;
 
-        StringTemplateView view = new StringTemplateView(template, context, exposeBindStatus, "text/html");
+        StringTemplateView view = createTemplate(template, context, exposeBindStatus, "text/html");
         view.render(model, request, response);
 
         verify(template).setAttribute(eq(StringTemplateView.BIND_STATUS_KEY), isA(BindStatusMap.class));
@@ -202,7 +202,7 @@ public class StringTemplateViewTests {
         request.setContextPath("/contextPath");
         request.setServletPath("/servletPath");
 
-        StringTemplateView view = new StringTemplateView(template, context, false, "text/html");
+        StringTemplateView view = createTemplate(template, context, false, "text/html");
         view.render(model, request, response);
 
         verify(template).setAttribute(StringTemplateView.SERVLET_PATH, "/contextPath/servletPath");
@@ -218,12 +218,23 @@ public class StringTemplateViewTests {
         Map<String, Object> model = new HashMap<String, Object>();
         ServletContext context = new MockServletContext();
 
-        StringTemplateView view = new StringTemplateView(template, context, false, "text/xml");
+        StringTemplateView view = createTemplate(template, context, false, "text/xml");
         view.render(model, request, response);
 
         InOrder order = inOrder(template, response);
         order.verify(response).setContentType("text/xml");
         order.verify(response).getWriter();
         order.verify(template).write(any(Writer.class));
+    }
+
+    private StringTemplateView createTemplate(WebStringTemplate template, ServletContext context,
+                                              boolean exposeBindStatus, String contentType) {
+
+        StringTemplateView view = new StringTemplateView();
+        view.setExposeBindStatus(exposeBindStatus);
+        view.setContentType(contentType);
+        view.setServletContext(context);
+        view.setTemplate(template);
+        return view;
     }
 }

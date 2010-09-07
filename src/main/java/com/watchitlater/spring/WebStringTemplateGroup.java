@@ -13,11 +13,10 @@ import java.io.InputStream;
 
 public class WebStringTemplateGroup extends StringTemplateGroup {
 
-    private final ResourceLoader resourceLoader;
+    protected final ResourceLoader resourceLoader;
 
     public WebStringTemplateGroup(ResourceLoader resourceLoader,
                                   String prefix) {
-
         super("web", prefix);
         this.resourceLoader = resourceLoader;
     }
@@ -53,7 +52,7 @@ public class WebStringTemplateGroup extends StringTemplateGroup {
         }
     }
 
-    private void closeQuietly(Closeable item) {
+    protected void closeQuietly(Closeable item) {
         if (item != null) {
             try {
                 item.close();

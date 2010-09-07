@@ -14,16 +14,16 @@ import java.util.Locale;
 
 public class StringTemplateViewResolver implements ViewResolver, ResourceLoaderAware, ServletContextAware, Ordered {
 
-    private ResourceLoader resourceLoader;
-    private ServletContext servletContext;
+    protected ResourceLoader resourceLoader;
+    protected ServletContext servletContext;
 
-    private String sourceFileCharEncoding = SystemUtils.FILE_ENCODING;
-    private List<Renderer> renderers = Collections.emptyList();
-    private String contentType = "text/html;charset=UTF-8";
-    private WebFormat defaultFormat = WebFormat.html;
-    private boolean exposeBindStatus = true;
-    private String prefix = "";
-    private int order = 1;
+    protected String sourceFileCharEncoding = SystemUtils.FILE_ENCODING;
+    protected List<Renderer> renderers = Collections.emptyList();
+    protected String contentType = "text/html;charset=UTF-8";
+    protected WebFormat defaultFormat = WebFormat.html;
+    protected boolean exposeBindStatus = true;
+    protected String prefix = "";
+    protected int order = 1;
 
     public void setResourceLoader(ResourceLoader resourceLoader) {
         this.resourceLoader = resourceLoader;
@@ -68,27 +68,40 @@ public class StringTemplateViewResolver implements ViewResolver, ResourceLoaderA
     public StringTemplateView resolveViewName(String viewName, Locale locale) {
         try {
             WebStringTemplate tempate = createTemplate(viewName);
-            return new StringTemplateView(tempate, servletContext, exposeBindStatus, contentType);
+            StringTemplateView view = createView();
+            setupView(tempate, view);
+            return view;
 
         } catch (TemplateNotFoundException e) {
             return null;
         }
     }
 
-    private WebStringTemplate createTemplate(String viewName) {
+    protected StringTemplateView createView() {
+        return new StringTemplateView();
+    }
+
+    protected void setupView(WebStringTemplate tempate, StringTemplateView view) {
+        view.setExposeBindStatus(exposeBindStatus);
+        view.setServletContext(servletContext);
+        view.setContentType(contentType);
+        view.setTemplate(tempate);
+    }
+
+    protected WebStringTemplate createTemplate(String viewName) {
         WebStringTemplate template = createGroup().createTemplate(viewName);
         template.setDefaultFormat(defaultFormat);
         registerAttributeRenderers(template);
         return template;
     }
 
-    private WebStringTemplateGroup createGroup() {
+    protected WebStringTemplateGroup createGroup() {
         WebStringTemplateGroup group = new WebStringTemplateGroup(resourceLoader, prefix);
         group.setFileCharEncoding(sourceFileCharEncoding);
         return group;
     }
 
-    private void registerAttributeRenderers(WebStringTemplate template) {
+    protected void registerAttributeRenderers(WebStringTemplate template) {
         for (Renderer renderer : renderers) {
             template.register(renderer);
         }

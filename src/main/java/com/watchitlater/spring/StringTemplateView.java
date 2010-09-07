@@ -13,6 +13,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
+@SuppressWarnings({"unchecked"})
 public class StringTemplateView implements View {
 
     public static final String BASE_PATH = "base";
@@ -33,18 +34,25 @@ public class StringTemplateView implements View {
 
     private final UrlPathHelper pathHelper = new UrlPathHelper();
 
-    private final ServletContext servletContext;
-    private final WebStringTemplate template;
-    private final boolean exposeBindStatus;
-    private final String contentType;
+    protected ServletContext servletContext;
+    protected WebStringTemplate template;
+    protected boolean exposeBindStatus;
+    protected String contentType;
 
-    public StringTemplateView(WebStringTemplate template, ServletContext servletContext,
-                              boolean exposeBindStatus, String contentType) {
-
-        this.exposeBindStatus = exposeBindStatus;
+    public void setServletContext(ServletContext servletContext) {
         this.servletContext = servletContext;
-        this.contentType = contentType;
+    }
+
+    public void setTemplate(WebStringTemplate template) {
         this.template = template;
+    }
+
+    public void setExposeBindStatus(boolean exposeBindStatus) {
+        this.exposeBindStatus = exposeBindStatus;
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
     }
 
     public String getContentType() {
@@ -62,7 +70,7 @@ public class StringTemplateView implements View {
         template.write(response.getWriter());
     }
 
-    private void exposeModel(Map<String, ?> model) {
+    protected void exposeModel(Map<String, ?> model) {
         template.setAttribute(MODEL_KEY, model);
 
         for (Map.Entry<String, ?> entry : model.entrySet()) {
@@ -72,7 +80,7 @@ public class StringTemplateView implements View {
         }
     }
 
-    private void exposeRequest(HttpServletRequest request) {
+    protected void exposeRequest(HttpServletRequest request) {
         template.setAttribute(PARAMS_KEY, getRequestParameters(request));
         template.setAttribute(REQUEST_KEY, getRequestAttributes(request));
         template.setAttribute(SESSION_KEY, getSessionAttributes(request));
@@ -85,15 +93,14 @@ public class StringTemplateView implements View {
         template.setAttribute(BASE_PATH, contextPath);
     }
 
-    @SuppressWarnings({"unchecked"})
-    private void exposeBindStatus(HttpServletRequest request, HttpServletResponse response, Map model) {
+    protected void exposeBindStatus(HttpServletRequest request, HttpServletResponse response, Map model) {
         if (exposeBindStatus) {
             RequestContext requestContext = new RequestContext(request, response, servletContext, model);
             template.setAttribute(BIND_STATUS_KEY, new BindStatusMap(requestContext));
         }
     }
 
-    private Map<String, Object> getRequestParameters(HttpServletRequest request) {
+    protected Map<String, Object> getRequestParameters(HttpServletRequest request) {
         Map<String, Object> params = new HashMap<String, Object>();
         for (Enumeration names = request.getParameterNames(); names.hasMoreElements();) {
             String name = (String) names.nextElement();
@@ -107,7 +114,7 @@ public class StringTemplateView implements View {
         return params;
     }
 
-    private Map<String, Object> getRequestAttributes(HttpServletRequest request) {
+    protected Map<String, Object> getRequestAttributes(HttpServletRequest request) {
         Map<String, Object> attributes = new HashMap<String, Object>();
         for (Enumeration names = request.getAttributeNames(); names.hasMoreElements();) {
             String name = (String) names.nextElement();
@@ -116,7 +123,7 @@ public class StringTemplateView implements View {
         return attributes;
     }
 
-    private Map<String, Object> getSessionAttributes(HttpServletRequest request) {
+    protected Map<String, Object> getSessionAttributes(HttpServletRequest request) {
         Map<String, Object> attributes = new HashMap<String, Object>();
         HttpSession session = request.getSession(false);
         if (session != null) {
@@ -128,7 +135,7 @@ public class StringTemplateView implements View {
         return attributes;
     }
 
-    public Map<String, Object> getApplicationAttributes() {
+    protected Map<String, Object> getApplicationAttributes() {
         Map<String, Object> attributes = new HashMap<String, Object>();
         for (Enumeration names = servletContext.getAttributeNames(); names.hasMoreElements();) {
             String name = (String) names.nextElement();
