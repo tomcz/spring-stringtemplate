@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <project name="spring-stringtemplate" default="build" basedir=".">
 
-    <property name="build.version" value="1.0" />
+    <property name="build.version" value="1.1" />
     <property name="application.name" value="${ant.project.name}-${build.version}" />
 
     <property name="src.dir" location="src/main/java" />
