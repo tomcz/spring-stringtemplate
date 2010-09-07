@@ -29,7 +29,7 @@
     <taskdef classpathref="cobertura.classpath" resource="tasks.properties" />
 
     <target name="build"
-            depends="clean,run-tests,check-tests,cobertura"
+            depends="clean,run-tests,check-tests,cobertura,make-src-jar"
             description="Build JARs, run unit tests and create coverage reports." />
 
     <target name="cobertura"
@@ -49,7 +49,7 @@
             <copy todir="${compile.dir}/classes" includeemptydirs="no">
                 <fileset dir="@{srcdir}" excludes="**/*.java" />
             </copy>
-            <jar jarfile="${compile.dir}/@{jarfile}" basedir="${compile.dir}/classes">
+            <jar destfile="${compile.dir}/@{jarfile}" basedir="${compile.dir}/classes">
                 <metainf dir="${basedir}" includes="LICENSE" />
                 <manifest>
                     <attribute name="Implementation-Title" value="${ant.project.name}" />
@@ -120,6 +120,16 @@
         <mkdir dir="${cobertura.report.dir}" />
         <cobertura-report format="html" datafile="${cobertura.datafile}"
                           destdir="${cobertura.report.dir}" srcdir="${src.dir}" />
+    </target>
+
+    <target name="make-src-jar">
+        <jar destfile="${compile.dir}/${application.name}-src.jar" basedir="${src.dir}">
+            <metainf dir="${basedir}" includes="LICENSE" />
+            <manifest>
+                <attribute name="Implementation-Title" value="${ant.project.name}" />
+                <attribute name="Implementation-Version" value="${build.version}" />
+            </manifest>
+        </jar>
     </target>
 
 </project>
