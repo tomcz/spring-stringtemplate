@@ -13,12 +13,11 @@ import java.io.InputStream;
 
 public class WebStringTemplateGroup extends StringTemplateGroup {
 
-    protected final ResourceLoader resourceLoader;
+    protected final ResourceLoader loader;
 
-    public WebStringTemplateGroup(ResourceLoader resourceLoader,
-                                  String prefix) {
-        super("web", prefix);
-        this.resourceLoader = resourceLoader;
+    public WebStringTemplateGroup(String groupName, String templateRoot, ResourceLoader loader) {
+        super(groupName, templateRoot);
+        this.loader = loader;
     }
 
     public WebStringTemplate createTemplate(String templatePath) {
@@ -31,10 +30,10 @@ public class WebStringTemplateGroup extends StringTemplateGroup {
     }
 
     @Override
-    protected StringTemplate loadTemplate(String name, String fileName) {
-        Resource resource = resourceLoader.getResource(fileName);
+    protected StringTemplate loadTemplate(String name, String filePath) {
+        Resource resource = loader.getResource(filePath);
         if (!resource.exists()) {
-            throw new TemplateNotFoundException(fileName);
+            return null;
         }
         InputStream stream = null;
         BufferedReader reader = null;

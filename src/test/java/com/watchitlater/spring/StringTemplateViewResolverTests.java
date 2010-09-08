@@ -20,7 +20,7 @@ public class StringTemplateViewResolverTests {
         resolver = new StringTemplateViewResolver();
         resolver.setServletContext(new MockServletContext());
         resolver.setResourceLoader(new FileSystemResourceLoader());
-        resolver.setPrefix("src/test/webapp/templates");
+        resolver.setTemplateRoot("src/test/webapp/templates");
     }
 
     @Test

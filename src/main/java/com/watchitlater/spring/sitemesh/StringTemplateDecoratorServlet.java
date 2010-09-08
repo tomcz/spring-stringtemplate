@@ -5,6 +5,8 @@ import com.opensymphony.module.sitemesh.RequestConstants;
 import com.watchitlater.spring.StringTemplateView;
 import com.watchitlater.spring.StringTemplateViewResolver;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.util.UrlPathHelper;
@@ -38,20 +40,11 @@ public class StringTemplateDecoratorServlet extends HttpServlet {
         resolver.setResourceLoader(wac);
         resolver.setServletContext(ctx);
 
-        String encoding = config.getInitParameter("sourceFileCharEncoding");
-        if (encoding != null) {
-            resolver.setSourceFileCharEncoding(encoding);
-        }
-
-        String contentType = config.getInitParameter("contentType");
-        if (contentType != null) {
-            resolver.setContentType(contentType);
-        }
-
-        String prefix = config.getInitParameter("prefix");
-        if (prefix != null) {
-            resolver.setPrefix(prefix);
-        }
+        BeanWrapper wrapper = new BeanWrapperImpl(resolver);
+        setInitParameter("sourceFileCharEncoding", config, wrapper);
+        setInitParameter("templateRoot", config, wrapper);
+        setInitParameter("contentType", config, wrapper);
+        setInitParameter("sharedRoot", config, wrapper);
     }
 
     @Override
@@ -85,5 +78,12 @@ public class StringTemplateDecoratorServlet extends HttpServlet {
             model.put("head", "");
         }
         return model;
+    }
+
+    private void setInitParameter(String paramName, ServletConfig config, BeanWrapper bean) {
+        String paramValue = config.getInitParameter(paramName);
+        if (paramValue != null) {
+            bean.setPropertyValue(paramName, paramValue);
+        }
     }
 }

@@ -22,7 +22,8 @@ public class StringTemplateViewResolver implements ViewResolver, ResourceLoaderA
     protected String contentType = "text/html;charset=UTF-8";
     protected WebFormat defaultFormat = WebFormat.html;
     protected boolean exposeBindStatus = true;
-    protected String prefix = "";
+    protected String templateRoot = "";
+    protected String sharedRoot;
     protected int order = 1;
 
     public void setResourceLoader(ResourceLoader resourceLoader) {
@@ -53,8 +54,12 @@ public class StringTemplateViewResolver implements ViewResolver, ResourceLoaderA
         this.contentType = contentType;
     }
 
-    public void setPrefix(String prefix) {
-        this.prefix = prefix;
+    public void setTemplateRoot(String templateRoot) {
+        this.templateRoot = templateRoot;
+    }
+
+    public void setSharedRoot(String sharedRoot) {
+        this.sharedRoot = sharedRoot;
     }
 
     public void setOrder(int order) {
@@ -72,7 +77,7 @@ public class StringTemplateViewResolver implements ViewResolver, ResourceLoaderA
             setupView(tempate, view);
             return view;
 
-        } catch (TemplateNotFoundException e) {
+        } catch (IllegalArgumentException e) {
             return null;
         }
     }
@@ -96,8 +101,13 @@ public class StringTemplateViewResolver implements ViewResolver, ResourceLoaderA
     }
 
     protected WebStringTemplateGroup createGroup() {
-        WebStringTemplateGroup group = new WebStringTemplateGroup(resourceLoader, prefix);
+        WebStringTemplateGroup group = new WebStringTemplateGroup("main", templateRoot, resourceLoader);
         group.setFileCharEncoding(sourceFileCharEncoding);
+        if (sharedRoot != null) {
+            WebStringTemplateGroup shared = new WebStringTemplateGroup("shared", sharedRoot, resourceLoader);
+            shared.setFileCharEncoding(sourceFileCharEncoding);
+            group.setSuperGroup(shared);
+        }
         return group;
     }
 

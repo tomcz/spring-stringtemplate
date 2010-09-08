@@ -5,7 +5,7 @@
     <title>$title$</title>
     $head;format="none"$
 </head>
-<body class='$page.properties.("body.class")$'>
+<body class="$bodyClass()$">
 <div id="container">
     <div id="header">
         <h1>$title$</h1>
