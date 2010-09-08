@@ -2,7 +2,7 @@
 <head>
     <title>Form</title>
 </head>
-<body>
+<body class="form">
 <form id="testForm" action="$servlet$$formAction$" method="get">
     <table>
         $formRow(id="name", name="Name", status=bindStatus.("command.name"))$
