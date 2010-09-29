@@ -18,15 +18,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
 public class StringTemplateDecoratorServlet extends HttpServlet {
 
-    private final UrlPathHelper pathHelper = new UrlPathHelper();
+    protected final UrlPathHelper pathHelper = new UrlPathHelper();
 
-    private StringTemplateViewResolver resolver;
+    protected StringTemplateViewResolver resolver;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -35,24 +36,17 @@ public class StringTemplateDecoratorServlet extends HttpServlet {
         ServletContext ctx = config.getServletContext();
         WebApplicationContext wac = WebApplicationContextUtils.getRequiredWebApplicationContext(ctx);
 
-        resolver = new StringTemplateViewResolver();
+        resolver = createViewResolver(config);
         resolver.setExposeBindStatus(false);
         resolver.setResourceLoader(wac);
         resolver.setServletContext(ctx);
-
-        BeanWrapper wrapper = new BeanWrapperImpl(resolver);
-        setInitParameter("sourceFileCharEncoding", config, wrapper);
-        setInitParameter("templateRoot", config, wrapper);
-        setInitParameter("contentType", config, wrapper);
-        setInitParameter("sharedRoot", config, wrapper);
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String lookupPath = pathHelper.getLookupPathForRequest(request);
-        StringTemplateView template = resolver.resolveViewName(viewName(lookupPath), Locale.getDefault());
+        StringTemplateView template = resolver.resolveViewName(viewName(request), getLocale(request));
         if (template != null) {
             template.render(pageModel(request), request, response);
         } else {
@@ -60,11 +54,16 @@ public class StringTemplateDecoratorServlet extends HttpServlet {
         }
     }
 
-    private String viewName(String lookupPath) {
+    protected String viewName(HttpServletRequest request) {
+        String lookupPath = pathHelper.getLookupPathForRequest(request);
         return StringUtils.substringBeforeLast(lookupPath, ".st");
     }
 
-    private Map<String, ?> pageModel(HttpServletRequest request) {
+    protected Locale getLocale(HttpServletRequest request) {
+        return Locale.getDefault();
+    }
+
+    protected Map<String, ?> pageModel(HttpServletRequest request) {
         Map<String, Object> model = new HashMap<String, Object>();
         HTMLPage page = (HTMLPage) request.getAttribute(RequestConstants.PAGE);
         if (page != null) {
@@ -80,7 +79,24 @@ public class StringTemplateDecoratorServlet extends HttpServlet {
         return model;
     }
 
-    private void setInitParameter(String paramName, ServletConfig config, BeanWrapper bean) {
+    protected StringTemplateViewResolver createViewResolver(ServletConfig config) {
+        StringTemplateViewResolver viewResolver = new StringTemplateViewResolver();
+        BeanWrapper wrapper = new BeanWrapperImpl(viewResolver);
+        setInitParameters(config, wrapper);
+        return viewResolver;
+    }
+
+    protected void setInitParameters(ServletConfig config, BeanWrapper wrapper) {
+        Enumeration names = config.getInitParameterNames();
+        while (names.hasMoreElements()) {
+            String name = (String) names.nextElement();
+            if (wrapper.isWritableProperty(name)) {
+                setInitParameter(name, config, wrapper);
+            }
+        }
+    }
+
+    protected void setInitParameter(String paramName, ServletConfig config, BeanWrapper bean) {
         String paramValue = config.getInitParameter(paramName);
         if (paramValue != null) {
             bean.setPropertyValue(paramName, paramValue);
