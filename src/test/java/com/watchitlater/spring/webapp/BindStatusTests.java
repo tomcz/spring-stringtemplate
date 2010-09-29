@@ -38,7 +38,7 @@ public class BindStatusTests {
         String number = RandomStringUtils.randomAlphabetic(10);
 
         WebConversation conv = new WebConversation();
-        WebResponse response = conv.getResponse("http://localhost:" + serverPort + "/stringtemplate/page/form");
+        WebResponse response = conv.getResponse(formPage());
 
         WebForm form = response.getFormWithID("testForm");
         form.setParameter("name", name);
@@ -51,6 +51,30 @@ public class BindStatusTests {
 
         HTMLElement[] elements = response.getElementsWithAttribute("class", "number error");
         assertThat(elements.length, equalTo(1));
+    }
+
+    @Test
+    public void shouldRedirectBackToClearedFormOnReset() throws Exception {
+        String name = RandomStringUtils.randomAlphanumeric(10);
+
+        WebConversation conv = new WebConversation();
+        WebResponse response = conv.getResponse(formPage());
+
+        WebForm form = response.getFormWithID("testForm");
+        form.setParameter("name", name);
+        response = form.submit();
+
+        form = response.getFormWithID("testForm");
+        assertThat(form.getParameterValue("name"), equalTo(name));
+
+        response = response.getLinkWith("Reset").click();
+
+        form = response.getFormWithID("testForm");
+        assertThat(form.getParameterValue("name"), equalTo(""));
+    }
+
+    private String formPage() {
+        return "http://localhost:" + serverPort + "/stringtemplate/page/form";
     }
 
     private static int findFreePort() throws Exception {

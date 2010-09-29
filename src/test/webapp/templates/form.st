@@ -8,7 +8,10 @@
         $formRow(id="name", name="Name", status=bindStatus.("command.name"))$
         $formRow(id="number", name="Number", status=bindStatus.("command.number"))$
         <tr>
-            <td colspan="2"><input type="submit" value="Submit"></td>
+            <td colspan="2">
+                <input type="submit" value="Submit">
+                <a href="$servlet$/reset">Reset</a>
+            </td>
         </tr>
     </table>
 </form>

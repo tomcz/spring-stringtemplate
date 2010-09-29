@@ -15,4 +15,9 @@ public class FormController {
         mv.addObject("formAction", "/form");
         return mv;
     }
+
+    @RequestMapping("/reset")
+    public String reset() {
+        return "redirect:/page/form";
+    }
 }
