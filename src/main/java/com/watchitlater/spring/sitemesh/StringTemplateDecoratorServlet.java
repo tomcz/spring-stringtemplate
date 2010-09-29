@@ -9,6 +9,8 @@ import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
+import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.util.UrlPathHelper;
 
 import javax.servlet.ServletConfig;
@@ -60,7 +62,12 @@ public class StringTemplateDecoratorServlet extends HttpServlet {
     }
 
     protected Locale getLocale(HttpServletRequest request) {
-        return Locale.getDefault();
+        LocaleResolver localeResolver = RequestContextUtils.getLocaleResolver(request);
+        if (localeResolver != null) {
+            return localeResolver.resolveLocale(request);
+        } else {
+            return request.getLocale();
+        }
     }
 
     protected Map<String, ?> pageModel(HttpServletRequest request) {
