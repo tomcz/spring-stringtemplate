@@ -16,7 +16,7 @@ public class MessageMap extends DataMap {
     private List<Object> args;
 
     public MessageMap(RequestContext context, String messageCode) {
-        this.defaultMessage = "#" + messageCode + "#";
+        this.defaultMessage = "?" + messageCode + "?";
         this.messageCode = messageCode;
         this.context = context;
     }
@@ -34,9 +34,7 @@ public class MessageMap extends DataMap {
     }
 
     protected String getMessage() {
-        return (args != null)
-                ? context.getMessage(messageCode, args, defaultMessage)
-                : context.getMessage(messageCode, defaultMessage);
+        return context.getMessage(messageCode, args, defaultMessage);
     }
 
     protected Object with(Object key) {

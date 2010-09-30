@@ -14,11 +14,8 @@
             </td>
         </tr>
     </table>
-    <p>
-        <span>$messages.("message.with.arguments.intro").to_s$</span><br>
-        <span>$messages.("message.with.arguments.text").(arg1).(arg2).(arg3).("WTF?").to_s$</span><br>
-        <span>$messages.("unknown.message.code").to_s$</span>
-    </p>
+    <p>$messages.("message.with.arguments").(arg1).("? & ?").(arg2).to_s$</p>
+    <p>$messages.("unknown.message.code").to_s$</p>
 </form>
 </body>
 </html>
