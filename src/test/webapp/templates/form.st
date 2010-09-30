@@ -5,8 +5,8 @@
 <body class="form">
 <form id="testForm" action="$servlet$$formAction$" method="get">
     <table>
-        $formRow(id="name", name="Name", status=bindStatus.("command.name"))$
-        $formRow(id="number", name="Number", status=bindStatus.("command.number"))$
+        $formRow(id="name", name=messages.("name.key").to_s, status=bindStatus.("command.name"))$
+        $formRow(id="number", name=messages.("number.key").to_s, status=bindStatus.("command.number"))$
         <tr>
             <td colspan="2">
                 <input type="submit" value="$messages.submitButton.to_s$">
