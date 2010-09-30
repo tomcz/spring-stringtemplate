@@ -23,6 +23,7 @@ public class StringTemplateViewResolver implements ViewResolver, ResourceLoaderA
     protected WebFormat defaultFormat = WebFormat.html;
     protected boolean exposeBindStatus = true;
     protected boolean exposeMessages = true;
+    protected boolean autoIndent = true;
     protected String templateRoot = "";
     protected String sharedRoot;
     protected int order = 1;
@@ -45,6 +46,10 @@ public class StringTemplateViewResolver implements ViewResolver, ResourceLoaderA
 
     public void setExposeMessages(boolean exposeMessages) {
         this.exposeMessages = exposeMessages;
+    }
+
+    public void setAutoIndent(boolean autoIndent) {
+        this.autoIndent = autoIndent;
     }
 
     public void setDefaultFormat(String defaultFormat) {
@@ -96,6 +101,7 @@ public class StringTemplateViewResolver implements ViewResolver, ResourceLoaderA
         view.setExposeMessages(exposeMessages);
         view.setServletContext(servletContext);
         view.setContentType(contentType);
+        view.setAutoIndent(autoIndent);
         view.setTemplate(tempate);
     }
 

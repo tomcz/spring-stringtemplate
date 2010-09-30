@@ -40,6 +40,7 @@ public class StringTemplateView implements View {
     protected WebStringTemplate template;
     protected boolean exposeBindStatus;
     protected boolean exposeMessages;
+    protected boolean autoIndent;
     protected String contentType;
 
     public void setServletContext(ServletContext servletContext) {
@@ -58,6 +59,10 @@ public class StringTemplateView implements View {
         this.exposeMessages = exposeMessages;
     }
 
+    public void setAutoIndent(boolean autoIndent) {
+        this.autoIndent = autoIndent;
+    }
+
     public void setContentType(String contentType) {
         this.contentType = contentType;
     }
@@ -74,7 +79,7 @@ public class StringTemplateView implements View {
         exposeRequestContext(request, response, model);
 
         response.setContentType(getContentType());
-        template.write(response.getWriter());
+        template.write(response.getWriter(), autoIndent);
     }
 
     protected void exposeModel(Map<String, ?> model) {

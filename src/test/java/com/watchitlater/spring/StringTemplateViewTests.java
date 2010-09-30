@@ -224,7 +224,7 @@ public class StringTemplateViewTests {
         InOrder order = inOrder(template, response);
         order.verify(response).setContentType("text/xml");
         order.verify(response).getWriter();
-        order.verify(template).write(any(Writer.class));
+        order.verify(template).write(any(Writer.class), eq(true));
     }
 
     private StringTemplateView createTemplate(WebStringTemplate template, ServletContext context,

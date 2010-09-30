@@ -1,6 +1,7 @@
 package com.watchitlater.spring;
 
 import org.antlr.stringtemplate.AttributeRenderer;
+import org.antlr.stringtemplate.AutoIndentWriter;
 import org.antlr.stringtemplate.NoIndentWriter;
 import org.antlr.stringtemplate.StringTemplate;
 
@@ -24,7 +25,11 @@ public class WebStringTemplate extends StringTemplate {
         registerRenderer(renderer.getTypeToRender(), new RendererAdaptor(renderer));
     }
 
-    public void write(Writer out) throws IOException {
-        write(new NoIndentWriter(out));
+    public void write(Writer out, boolean indent) throws IOException {
+        if (indent) {
+            write(new AutoIndentWriter(out));
+        } else {
+            write(new NoIndentWriter(out));
+        }
     }
 }
