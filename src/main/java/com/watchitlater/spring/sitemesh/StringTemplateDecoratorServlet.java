@@ -39,7 +39,6 @@ public class StringTemplateDecoratorServlet extends HttpServlet {
         WebApplicationContext wac = WebApplicationContextUtils.getRequiredWebApplicationContext(ctx);
 
         resolver = createViewResolver(config);
-        resolver.setExposeBindStatus(false);
         resolver.setResourceLoader(wac);
         resolver.setServletContext(ctx);
     }
@@ -74,11 +73,12 @@ public class StringTemplateDecoratorServlet extends HttpServlet {
         Map<String, Object> model = new HashMap<String, Object>();
         HTMLPage page = (HTMLPage) request.getAttribute(RequestConstants.PAGE);
         if (page != null) {
-            model.put("title", page.getTitle());
-            model.put("head", page.getHead());
-            model.put("body", page.getBody());
             model.put("page", page);
+            model.put("head", StringUtils.trim(page.getHead()));
+            model.put("body", StringUtils.trim(page.getBody()));
+            model.put("title", StringUtils.trim(page.getTitle()));
         } else {
+            model.put("page", new HashMap());
             model.put("title", "No Title");
             model.put("body", "No Body");
             model.put("head", "");
@@ -88,25 +88,21 @@ public class StringTemplateDecoratorServlet extends HttpServlet {
 
     protected StringTemplateViewResolver createViewResolver(ServletConfig config) {
         StringTemplateViewResolver viewResolver = new StringTemplateViewResolver();
-        BeanWrapper wrapper = new BeanWrapperImpl(viewResolver);
-        setInitParameters(config, wrapper);
+        viewResolver.setExposeBindStatus(false);
+        viewResolver.setExposeMessages(false);
+        initialise(config, viewResolver);
         return viewResolver;
     }
 
-    protected void setInitParameters(ServletConfig config, BeanWrapper wrapper) {
+    protected void initialise(ServletConfig config, StringTemplateViewResolver viewResolver) {
+        BeanWrapper wrapper = new BeanWrapperImpl(viewResolver);
         Enumeration names = config.getInitParameterNames();
         while (names.hasMoreElements()) {
             String name = (String) names.nextElement();
             if (wrapper.isWritableProperty(name)) {
-                setInitParameter(name, config, wrapper);
+                String paramValue = config.getInitParameter(name);
+                wrapper.setPropertyValue(name, paramValue);
             }
-        }
-    }
-
-    protected void setInitParameter(String paramName, ServletConfig config, BeanWrapper bean) {
-        String paramValue = config.getInitParameter(paramName);
-        if (paramValue != null) {
-            bean.setPropertyValue(paramName, paramValue);
         }
     }
 }

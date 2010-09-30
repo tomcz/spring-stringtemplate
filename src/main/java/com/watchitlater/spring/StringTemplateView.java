@@ -32,11 +32,14 @@ public class StringTemplateView implements View {
 
     public static final String BIND_STATUS_KEY = "bindStatus";
 
+    public static final String MESSAGES_KEY = "messages";
+
     private final UrlPathHelper pathHelper = new UrlPathHelper();
 
     protected ServletContext servletContext;
     protected WebStringTemplate template;
     protected boolean exposeBindStatus;
+    protected boolean exposeMessages;
     protected String contentType;
 
     public void setServletContext(ServletContext servletContext) {
@@ -49,6 +52,10 @@ public class StringTemplateView implements View {
 
     public void setExposeBindStatus(boolean exposeBindStatus) {
         this.exposeBindStatus = exposeBindStatus;
+    }
+
+    public void setExposeMessages(boolean exposeMessages) {
+        this.exposeMessages = exposeMessages;
     }
 
     public void setContentType(String contentType) {
@@ -64,7 +71,7 @@ public class StringTemplateView implements View {
 
         exposeModel(model);
         exposeRequest(request);
-        exposeBindStatus(request, response, model);
+        exposeRequestContext(request, response, model);
 
         response.setContentType(getContentType());
         template.write(response.getWriter());
@@ -93,10 +100,15 @@ public class StringTemplateView implements View {
         template.setAttribute(BASE_PATH, contextPath);
     }
 
-    protected void exposeBindStatus(HttpServletRequest request, HttpServletResponse response, Map model) {
-        if (exposeBindStatus) {
+    protected void exposeRequestContext(HttpServletRequest request, HttpServletResponse response, Map model) {
+        if (exposeBindStatus || exposeMessages) {
             RequestContext requestContext = new RequestContext(request, response, servletContext, model);
-            template.setAttribute(BIND_STATUS_KEY, new BindStatusMap(requestContext));
+            if (exposeBindStatus) {
+                template.setAttribute(BIND_STATUS_KEY, new BindStatusMap(requestContext));
+            }
+            if (exposeMessages) {
+                template.setAttribute(MESSAGES_KEY, new MessagesMap(requestContext));
+            }
         }
     }
 

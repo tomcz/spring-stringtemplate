@@ -22,6 +22,7 @@ public class StringTemplateViewResolver implements ViewResolver, ResourceLoaderA
     protected String contentType = "text/html;charset=UTF-8";
     protected WebFormat defaultFormat = WebFormat.html;
     protected boolean exposeBindStatus = true;
+    protected boolean exposeMessages = true;
     protected String templateRoot = "";
     protected String sharedRoot;
     protected int order = 1;
@@ -40,6 +41,10 @@ public class StringTemplateViewResolver implements ViewResolver, ResourceLoaderA
 
     public void setExposeBindStatus(boolean exposeBindStatus) {
         this.exposeBindStatus = exposeBindStatus;
+    }
+
+    public void setExposeMessages(boolean exposeMessages) {
+        this.exposeMessages = exposeMessages;
     }
 
     public void setDefaultFormat(String defaultFormat) {
@@ -88,6 +93,7 @@ public class StringTemplateViewResolver implements ViewResolver, ResourceLoaderA
 
     protected void setupView(WebStringTemplate tempate, StringTemplateView view) {
         view.setExposeBindStatus(exposeBindStatus);
+        view.setExposeMessages(exposeMessages);
         view.setServletContext(servletContext);
         view.setContentType(contentType);
         view.setTemplate(tempate);

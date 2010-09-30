@@ -32,7 +32,7 @@ public enum WebFormat {
             case url:
                 return encodeURL(text);
             default:
-                return text.trim();
+                return text;
         }
     }
 

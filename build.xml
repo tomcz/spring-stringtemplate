@@ -65,11 +65,9 @@
         <make-jar srcdir="${test.dir}" jarfile="${application.name}-tests.jar" />
     </target>
 
-    <target name="run-tests" depends="make-jars"
-            description="Run all tests. Use -Dtestcase=SomeTestClassName to specify a single test.">
+    <target name="run-tests" depends="make-jars" description="Run all tests. Use -Dtestcase=SomeTestClassName to specify a single test.">
         <mkdir dir="${report.dir}" />
         <junit fork="yes" forkmode="once" printsummary="yes" haltonfailure="no" failureproperty="unit.tests.failed">
-            <sysproperty key="net.sourceforge.cobertura.datafile" file="${cobertura.datafile}" />
             <classpath refid="classpath" />
             <formatter type="xml" />
             <batchtest if="testcase" todir="${report.dir}">

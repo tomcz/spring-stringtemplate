@@ -13,6 +13,9 @@ public class FormController {
     public ModelAndView process(@ModelAttribute("command") Command command, BindingResult result) {
         ModelAndView mv = new ModelAndView("form", result.getModel());
         mv.addObject("formAction", "/form");
+        mv.addObject("arg1", "Steal underpants");
+        mv.addObject("arg2", "Something something");
+        mv.addObject("arg3", "Profit");
         return mv;
     }
 
