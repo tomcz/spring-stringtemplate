@@ -23,7 +23,7 @@ public class StringTemplateViewResolver implements ViewResolver, ResourceLoaderA
     protected List<Renderer> renderers = Collections.emptyList();
     protected String contentType = "text/html;charset=UTF-8";
     protected WebFormat defaultFormat = WebFormat.html;
-    protected boolean exposeThemeMessages = false;
+    protected boolean exposeThemeMessages = true;
     protected boolean exposeBindStatus = true;
     protected boolean exposeMessages = true;
     protected boolean autoIndent = true;

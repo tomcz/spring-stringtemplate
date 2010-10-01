@@ -84,7 +84,6 @@ public class StringTemplateDecoratorServlet extends HttpServlet {
 
     protected StringTemplateViewResolver createResolver(ServletConfig config) {
         StringTemplateViewResolver viewResolver = createResolver();
-        viewResolver.setExposeMessages(false);
         viewResolver.setExposeBindStatus(false);
         initParameters(viewResolver, config);
         initContexts(viewResolver, config);
