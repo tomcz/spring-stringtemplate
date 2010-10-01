@@ -121,6 +121,7 @@
     </target>
 
     <target name="make-src-jar">
+        <mkdir dir="${compile.dir}" />
         <jar destfile="${compile.dir}/${application.name}-src.jar" basedir="${src.dir}">
             <metainf dir="${basedir}" includes="LICENSE" />
             <manifest>
@@ -128,6 +129,10 @@
                 <attribute name="Implementation-Version" value="${build.version}" />
             </manifest>
         </jar>
+    </target>
+
+    <target name="run-jetty" depends="make-jars" description="Run sample jetty web application.">
+        <java classname="com.watchitlater.spring.webapp.WebServer" fork="yes" failonerror="yes" classpathref="classpath" />
     </target>
 
 </project>
