@@ -1,7 +1,6 @@
 package com.watchitlater.spring.sitemesh;
 
 import org.junit.Test;
-import org.mockito.internal.stubbing.defaultanswers.ReturnsSmartNulls;
 import org.springframework.core.io.Resource;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -21,7 +20,7 @@ public class StringTemplateDecoratorServletTests {
 
     @Test
     public void shouldSend404ErrorWhenDecoratorNotFound() throws Exception {
-        WebApplicationContext wac = mock(WebApplicationContext.class, new ReturnsSmartNulls());
+        WebApplicationContext wac = mock(WebApplicationContext.class);
         Resource resource = mock(Resource.class);
 
         MockServletContext servletContext = new MockServletContext();

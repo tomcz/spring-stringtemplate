@@ -1,6 +1,6 @@
 package com.watchitlater.spring;
 
-import org.apache.commons.lang.SystemUtils;
+import org.antlr.stringtemplate.StringTemplateErrorListener;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.Ordered;
 import org.springframework.core.io.ResourceLoader;
@@ -17,7 +17,9 @@ public class StringTemplateViewResolver implements ViewResolver, ResourceLoaderA
     protected ResourceLoader resourceLoader;
     protected ServletContext servletContext;
 
-    protected String sourceFileCharEncoding = SystemUtils.FILE_ENCODING;
+    protected StringTemplateErrorListener templateErrorListener;
+    protected String sourceFileCharEncoding;
+
     protected List<Renderer> renderers = Collections.emptyList();
     protected String contentType = "text/html;charset=UTF-8";
     protected WebFormat defaultFormat = WebFormat.html;
@@ -26,6 +28,7 @@ public class StringTemplateViewResolver implements ViewResolver, ResourceLoaderA
     protected boolean autoIndent = true;
     protected String templateRoot = "";
     protected String sharedRoot;
+
     protected int order = 1;
 
     public void setResourceLoader(ResourceLoader resourceLoader) {
@@ -34,6 +37,10 @@ public class StringTemplateViewResolver implements ViewResolver, ResourceLoaderA
 
     public void setServletContext(ServletContext servletContext) {
         this.servletContext = servletContext;
+    }
+
+    public void setTemplateErrorListener(StringTemplateErrorListener templateErrorListener) {
+        this.templateErrorListener = templateErrorListener;
     }
 
     public void setSourceFileCharEncoding(String sourceFileCharEncoding) {
@@ -84,7 +91,7 @@ public class StringTemplateViewResolver implements ViewResolver, ResourceLoaderA
         try {
             WebStringTemplate tempate = createTemplate(viewName);
             StringTemplateView view = createView();
-            setupView(tempate, view);
+            initView(tempate, view);
             return view;
 
         } catch (IllegalArgumentException e) {
@@ -96,7 +103,7 @@ public class StringTemplateViewResolver implements ViewResolver, ResourceLoaderA
         return new StringTemplateView();
     }
 
-    protected void setupView(WebStringTemplate tempate, StringTemplateView view) {
+    protected void initView(WebStringTemplate tempate, StringTemplateView view) {
         view.setExposeBindStatus(exposeBindStatus);
         view.setExposeMessages(exposeMessages);
         view.setServletContext(servletContext);
@@ -112,20 +119,29 @@ public class StringTemplateViewResolver implements ViewResolver, ResourceLoaderA
         return template;
     }
 
-    protected WebStringTemplateGroup createGroup() {
-        WebStringTemplateGroup group = new WebStringTemplateGroup("main", templateRoot, resourceLoader);
-        group.setFileCharEncoding(sourceFileCharEncoding);
-        if (sharedRoot != null) {
-            WebStringTemplateGroup shared = new WebStringTemplateGroup("shared", sharedRoot, resourceLoader);
-            shared.setFileCharEncoding(sourceFileCharEncoding);
-            group.setSuperGroup(shared);
-        }
-        return group;
-    }
-
     protected void registerAttributeRenderers(WebStringTemplate template) {
         for (Renderer renderer : renderers) {
             template.register(renderer);
+        }
+    }
+
+    protected WebStringTemplateGroup createGroup() {
+        WebStringTemplateGroup group = new WebStringTemplateGroup("main", templateRoot, resourceLoader);
+        if (sharedRoot != null) {
+            WebStringTemplateGroup shared = new WebStringTemplateGroup("shared", sharedRoot, resourceLoader);
+            group.setSuperGroup(shared);
+            initGroup(shared);
+        }
+        initGroup(group);
+        return group;
+    }
+
+    protected void initGroup(WebStringTemplateGroup group) {
+        if (sourceFileCharEncoding != null) {
+            group.setFileCharEncoding(sourceFileCharEncoding);
+        }
+        if (templateErrorListener != null) {
+            group.setErrorListener(templateErrorListener);
         }
     }
 }

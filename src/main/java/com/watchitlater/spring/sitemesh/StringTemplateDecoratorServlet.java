@@ -4,9 +4,11 @@ import com.opensymphony.module.sitemesh.HTMLPage;
 import com.opensymphony.module.sitemesh.RequestConstants;
 import com.watchitlater.spring.StringTemplateView;
 import com.watchitlater.spring.StringTemplateViewResolver;
+import org.antlr.stringtemplate.StringTemplateErrorListener;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.beans.BeansException;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.servlet.LocaleResolver;
@@ -33,14 +35,8 @@ public class StringTemplateDecoratorServlet extends HttpServlet {
 
     @Override
     public void init(ServletConfig config) throws ServletException {
+        resolver = createResolver(config);
         super.init(config);
-
-        ServletContext ctx = config.getServletContext();
-        WebApplicationContext wac = WebApplicationContextUtils.getRequiredWebApplicationContext(ctx);
-
-        resolver = createViewResolver(config);
-        resolver.setResourceLoader(wac);
-        resolver.setServletContext(ctx);
     }
 
     @Override
@@ -86,15 +82,20 @@ public class StringTemplateDecoratorServlet extends HttpServlet {
         return model;
     }
 
-    protected StringTemplateViewResolver createViewResolver(ServletConfig config) {
-        StringTemplateViewResolver viewResolver = new StringTemplateViewResolver();
-        viewResolver.setExposeBindStatus(false);
+    protected StringTemplateViewResolver createResolver(ServletConfig config) {
+        StringTemplateViewResolver viewResolver = createResolver();
         viewResolver.setExposeMessages(false);
-        initialise(config, viewResolver);
+        viewResolver.setExposeBindStatus(false);
+        initParameters(viewResolver, config);
+        initContexts(viewResolver, config);
         return viewResolver;
     }
 
-    protected void initialise(ServletConfig config, StringTemplateViewResolver viewResolver) {
+    protected StringTemplateViewResolver createResolver() {
+        return new StringTemplateViewResolver();
+    }
+
+    protected void initParameters(StringTemplateViewResolver viewResolver, ServletConfig config) {
         BeanWrapper wrapper = new BeanWrapperImpl(viewResolver);
         Enumeration names = config.getInitParameterNames();
         while (names.hasMoreElements()) {
@@ -103,6 +104,24 @@ public class StringTemplateDecoratorServlet extends HttpServlet {
                 String paramValue = config.getInitParameter(name);
                 wrapper.setPropertyValue(name, paramValue);
             }
+        }
+    }
+
+    protected void initContexts(StringTemplateViewResolver viewResolver, ServletConfig config) {
+        ServletContext ctx = config.getServletContext();
+        WebApplicationContext wac = WebApplicationContextUtils.getRequiredWebApplicationContext(ctx);
+        StringTemplateErrorListener listener = findTemplateErrorListener(wac);
+
+        viewResolver.setTemplateErrorListener(listener);
+        viewResolver.setResourceLoader(wac);
+        viewResolver.setServletContext(ctx);
+    }
+
+    protected StringTemplateErrorListener findTemplateErrorListener(WebApplicationContext wac) {
+        try {
+            return wac.getBean(StringTemplateErrorListener.class);
+        } catch (BeansException e) {
+            return null;
         }
     }
 }

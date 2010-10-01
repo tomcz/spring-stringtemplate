@@ -10,13 +10,11 @@ import org.springframework.web.context.WebApplicationContext;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
-import java.io.Writer;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.hamcrest.Matchers.hasEntry;
-import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyObject;
 import static org.mockito.Mockito.argThat;
 import static org.mockito.Mockito.eq;
@@ -221,10 +219,9 @@ public class StringTemplateViewTests {
         StringTemplateView view = createTemplate(template, context, false, "text/xml");
         view.render(model, request, response);
 
-        InOrder order = inOrder(template, response);
+        InOrder order = inOrder(response);
         order.verify(response).setContentType("text/xml");
         order.verify(response).getWriter();
-        order.verify(template).write(any(Writer.class), eq(true));
     }
 
     private StringTemplateView createTemplate(WebStringTemplate template, ServletContext context,

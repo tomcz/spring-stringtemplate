@@ -1,0 +1,30 @@
+package com.watchitlater.spring.log;
+
+import org.antlr.stringtemplate.StringTemplateErrorListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class Slf4jStringTemplateErrorListener implements StringTemplateErrorListener {
+
+    private Logger logger;
+
+    public Slf4jStringTemplateErrorListener() {
+        setLogName("StringTemplate");
+    }
+
+    public void setLogName(String logName) {
+        logger = LoggerFactory.getLogger(logName);
+    }
+
+    public void setLogClass(Class logClass) {
+        logger = LoggerFactory.getLogger(logClass);
+    }
+
+    public void error(String message, Throwable throwable) {
+        logger.error(message, throwable);
+    }
+
+    public void warning(String message) {
+        logger.warn(message);
+    }
+}

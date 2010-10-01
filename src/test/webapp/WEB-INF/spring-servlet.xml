@@ -12,6 +12,7 @@
     <context:component-scan base-package="com.watchitlater.spring.webapp" />
 
     <bean class="com.watchitlater.spring.StringTemplateViewResolver"
+          p:templateErrorListener-ref="templateErrorListener"
           p:templateRoot="/templates"
           p:sharedRoot="/shared"
           p:order="1" />
@@ -24,8 +25,5 @@
 
     <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"
           p:cacheSeconds="0" />
-
-    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource"
-          p:basename="messages" />
 
 </beans>

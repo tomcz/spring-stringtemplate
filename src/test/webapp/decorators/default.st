@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <title>$title$</title>
+    <title>$messages.("decorator.title").to_s$ - $title$</title>
     $head;format="none"$
 </head>
 <body class="$bodyClass()$">

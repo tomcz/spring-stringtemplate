@@ -32,6 +32,10 @@
             <param-name>sharedRoot</param-name>
             <param-value>/shared</param-value>
         </init-param>
+        <init-param>
+            <param-name>exposeMessages</param-name>
+            <param-value>true</param-value>
+        </init-param>
         <load-on-startup>2</load-on-startup>
     </servlet>
 
