@@ -5,12 +5,10 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
                            http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-    <bean id="messageSource"
-          class="org.springframework.context.support.ResourceBundleMessageSource"
-          p:basename="messages" />
+    <bean id="messageSource" p:basename="messages"
+          class="org.springframework.context.support.ResourceBundleMessageSource" />
 
     <bean id="templateErrorListener"
-          class="com.watchitlater.spring.log.Slf4jStringTemplateErrorListener"
-          p:logClass="org.antlr.stringtemplate.StringTemplateGroup" />
+          class="com.watchitlater.spring.log.Slf4jStringTemplateErrorListener" />
 
 </beans>
