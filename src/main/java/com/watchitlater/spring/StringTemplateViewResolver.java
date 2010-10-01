@@ -96,7 +96,7 @@ public class StringTemplateViewResolver implements ViewResolver, ResourceLoaderA
         try {
             WebStringTemplate tempate = createTemplate(viewName);
             StringTemplateView view = createView();
-            initView(tempate, view);
+            initView(view, tempate);
             return view;
 
         } catch (IllegalArgumentException e) {
@@ -108,7 +108,7 @@ public class StringTemplateViewResolver implements ViewResolver, ResourceLoaderA
         return new StringTemplateView();
     }
 
-    protected void initView(WebStringTemplate tempate, StringTemplateView view) {
+    protected void initView(StringTemplateView view, WebStringTemplate tempate) {
         view.setExposeThemeMessages(exposeThemeMessages);
         view.setExposeBindStatus(exposeBindStatus);
         view.setExposeMessages(exposeMessages);
