@@ -9,11 +9,11 @@ public class MessageMap extends DataMap {
 
     public static final String TO_STRING_KEY = "to_s";
 
-    private final RequestContext context;
-    private final String defaultMessage;
-    private final String messageCode;
+    protected final RequestContext context;
+    protected final String defaultMessage;
+    protected final String messageCode;
 
-    private List<Object> args;
+    protected List<Object> args;
 
     public MessageMap(RequestContext context, String messageCode) {
         this.defaultMessage = "?" + messageCode + "?";

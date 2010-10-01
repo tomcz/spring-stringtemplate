@@ -23,6 +23,7 @@ public class StringTemplateViewResolver implements ViewResolver, ResourceLoaderA
     protected List<Renderer> renderers = Collections.emptyList();
     protected String contentType = "text/html;charset=UTF-8";
     protected WebFormat defaultFormat = WebFormat.html;
+    protected boolean exposeThemeMessages = false;
     protected boolean exposeBindStatus = true;
     protected boolean exposeMessages = true;
     protected boolean autoIndent = true;
@@ -45,6 +46,10 @@ public class StringTemplateViewResolver implements ViewResolver, ResourceLoaderA
 
     public void setSourceFileCharEncoding(String sourceFileCharEncoding) {
         this.sourceFileCharEncoding = sourceFileCharEncoding;
+    }
+
+    public void setExposeThemeMessages(boolean exposeThemeMessages) {
+        this.exposeThemeMessages = exposeThemeMessages;
     }
 
     public void setExposeBindStatus(boolean exposeBindStatus) {
@@ -104,6 +109,7 @@ public class StringTemplateViewResolver implements ViewResolver, ResourceLoaderA
     }
 
     protected void initView(WebStringTemplate tempate, StringTemplateView view) {
+        view.setExposeThemeMessages(exposeThemeMessages);
         view.setExposeBindStatus(exposeBindStatus);
         view.setExposeMessages(exposeMessages);
         view.setServletContext(servletContext);

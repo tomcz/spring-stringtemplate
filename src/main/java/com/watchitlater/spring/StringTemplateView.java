@@ -30,6 +30,8 @@ public class StringTemplateView implements View {
 
     public static final String APPLICATION_KEY = "application";
 
+    public static final String THEME_MESSAGES_KEY = "themeMessages";
+
     public static final String BIND_STATUS_KEY = "bindStatus";
 
     public static final String MESSAGES_KEY = "messages";
@@ -38,8 +40,11 @@ public class StringTemplateView implements View {
 
     protected ServletContext servletContext;
     protected WebStringTemplate template;
+
+    protected boolean exposeThemeMessages;
     protected boolean exposeBindStatus;
     protected boolean exposeMessages;
+
     protected boolean autoIndent;
     protected String contentType;
 
@@ -49,6 +54,10 @@ public class StringTemplateView implements View {
 
     public void setTemplate(WebStringTemplate template) {
         this.template = template;
+    }
+
+    public void setExposeThemeMessages(boolean exposeThemeMessages) {
+        this.exposeThemeMessages = exposeThemeMessages;
     }
 
     public void setExposeBindStatus(boolean exposeBindStatus) {
@@ -106,13 +115,16 @@ public class StringTemplateView implements View {
     }
 
     protected void exposeRequestContext(HttpServletRequest request, HttpServletResponse response, Map model) {
-        if (exposeBindStatus || exposeMessages) {
+        if (exposeBindStatus || exposeMessages || exposeThemeMessages) {
             RequestContext requestContext = new RequestContext(request, response, servletContext, model);
             if (exposeBindStatus) {
                 template.setAttribute(BIND_STATUS_KEY, new BindStatusMap(requestContext));
             }
             if (exposeMessages) {
                 template.setAttribute(MESSAGES_KEY, new MessagesMap(requestContext));
+            }
+            if (exposeThemeMessages) {
+                template.setAttribute(THEME_MESSAGES_KEY, new ThemeMessagesMap(requestContext));
             }
         }
     }

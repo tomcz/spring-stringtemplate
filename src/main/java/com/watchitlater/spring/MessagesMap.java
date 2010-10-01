@@ -4,7 +4,7 @@ import org.springframework.web.servlet.support.RequestContext;
 
 public class MessagesMap extends DataMap {
 
-    private final RequestContext context;
+    protected final RequestContext context;
 
     public MessagesMap(RequestContext context) {
         this.context = context;
