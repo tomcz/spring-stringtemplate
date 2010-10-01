@@ -29,7 +29,7 @@
     <taskdef classpathref="cobertura.classpath" resource="tasks.properties" />
 
     <target name="build"
-            depends="clean,run-tests,check-tests,cobertura,make-src-jar"
+            depends="clean,run-tests,check-tests,make-src-jar"
             description="Build JARs, run unit tests and create coverage reports." />
 
     <target name="cobertura"

@@ -43,12 +43,16 @@ public class StringTemplateDecoratorServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        StringTemplateView template = resolver.resolveViewName(viewName(request), getLocale(request));
+        StringTemplateView template = resolveTemplate(request);
         if (template != null) {
-            template.render(pageModel(request), request, response);
+            render(template, request, response);
         } else {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
+    }
+
+    protected StringTemplateView resolveTemplate(HttpServletRequest request) {
+        return resolver.resolveViewName(viewName(request), getLocale(request));
     }
 
     protected String viewName(HttpServletRequest request) {
@@ -62,6 +66,20 @@ public class StringTemplateDecoratorServlet extends HttpServlet {
             return localeResolver.resolveLocale(request);
         } else {
             return request.getLocale();
+        }
+    }
+
+    protected void render(StringTemplateView template, HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+
+        try {
+            template.render(pageModel(request), request, response);
+
+        } catch (IOException e) {
+            throw e; // no need to wrap
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
