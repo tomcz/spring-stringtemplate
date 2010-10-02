@@ -38,33 +38,22 @@ public class StringTemplateView implements View {
     private final UrlPathHelper pathHelper = new UrlPathHelper();
 
     protected ServletContext servletContext;
+    protected boolean exposeRequestContext;
+
     protected WebStringTemplate template;
-
-    protected boolean exposeThemeMessages;
-    protected boolean exposeBindStatus;
-    protected boolean exposeMessages;
-
-    protected boolean autoIndent;
     protected String contentType;
-
-    public void setServletContext(ServletContext servletContext) {
-        this.servletContext = servletContext;
-    }
+    protected boolean autoIndent;
 
     public void setTemplate(WebStringTemplate template) {
         this.template = template;
     }
 
-    public void setExposeThemeMessages(boolean exposeThemeMessages) {
-        this.exposeThemeMessages = exposeThemeMessages;
+    public void setServletContext(ServletContext servletContext) {
+        this.servletContext = servletContext;
     }
 
-    public void setExposeBindStatus(boolean exposeBindStatus) {
-        this.exposeBindStatus = exposeBindStatus;
-    }
-
-    public void setExposeMessages(boolean exposeMessages) {
-        this.exposeMessages = exposeMessages;
+    public void setExposeRequestContext(boolean exposeRequestContext) {
+        this.exposeRequestContext = exposeRequestContext;
     }
 
     public void setAutoIndent(boolean autoIndent) {
@@ -114,17 +103,11 @@ public class StringTemplateView implements View {
     }
 
     protected void exposeRequestContext(HttpServletRequest request, HttpServletResponse response, Map model) {
-        if (exposeBindStatus || exposeMessages || exposeThemeMessages) {
+        if (exposeRequestContext) {
             RequestContext requestContext = new RequestContext(request, response, servletContext, model);
-            if (exposeBindStatus) {
-                template.setAttribute(BIND_STATUS_KEY, new BindStatusMap(requestContext));
-            }
-            if (exposeMessages) {
-                template.setAttribute(MESSAGES_KEY, new MessagesMap(requestContext));
-            }
-            if (exposeThemeMessages) {
-                template.setAttribute(THEME_MESSAGES_KEY, new ThemeMessagesMap(requestContext));
-            }
+            template.setAttribute(THEME_MESSAGES_KEY, new ThemeMessagesMap(requestContext));
+            template.setAttribute(BIND_STATUS_KEY, new BindStatusMap(requestContext));
+            template.setAttribute(MESSAGES_KEY, new MessagesMap(requestContext));
         }
     }
 

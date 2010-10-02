@@ -23,9 +23,7 @@ public class StringTemplateViewResolver implements ViewResolver, ResourceLoaderA
     protected List<Renderer> renderers = Collections.emptyList();
     protected String contentType = "text/html;charset=UTF-8";
     protected WebFormat defaultFormat = WebFormat.html;
-    protected boolean exposeThemeMessages = true;
-    protected boolean exposeBindStatus = true;
-    protected boolean exposeMessages = true;
+    protected boolean exposeRequestContext = true;
     protected boolean autoIndent = true;
     protected String templateRoot = "";
     protected String sharedRoot;
@@ -48,16 +46,8 @@ public class StringTemplateViewResolver implements ViewResolver, ResourceLoaderA
         this.sourceFileCharEncoding = sourceFileCharEncoding;
     }
 
-    public void setExposeThemeMessages(boolean exposeThemeMessages) {
-        this.exposeThemeMessages = exposeThemeMessages;
-    }
-
-    public void setExposeBindStatus(boolean exposeBindStatus) {
-        this.exposeBindStatus = exposeBindStatus;
-    }
-
-    public void setExposeMessages(boolean exposeMessages) {
-        this.exposeMessages = exposeMessages;
+    public void setExposeRequestContext(boolean exposeRequestContext) {
+        this.exposeRequestContext = exposeRequestContext;
     }
 
     public void setAutoIndent(boolean autoIndent) {
@@ -109,9 +99,7 @@ public class StringTemplateViewResolver implements ViewResolver, ResourceLoaderA
     }
 
     protected void initView(StringTemplateView view, WebStringTemplate tempate) {
-        view.setExposeThemeMessages(exposeThemeMessages);
-        view.setExposeBindStatus(exposeBindStatus);
-        view.setExposeMessages(exposeMessages);
+        view.setExposeRequestContext(exposeRequestContext);
         view.setServletContext(servletContext);
         view.setContentType(contentType);
         view.setAutoIndent(autoIndent);

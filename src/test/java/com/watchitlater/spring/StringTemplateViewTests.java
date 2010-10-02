@@ -152,7 +152,7 @@ public class StringTemplateViewTests {
     }
 
     @Test
-    public void shouldNotExposeBindStatusWhenConfiguredNotToExpose() throws Exception {
+    public void shouldNotExposeRequestContextWhenConfiguredNotToExpose() throws Exception {
         WebStringTemplate template = mock(WebStringTemplate.class);
 
         MockHttpServletResponse response = new MockHttpServletResponse();
@@ -160,16 +160,18 @@ public class StringTemplateViewTests {
         Map<String, Object> model = new HashMap<String, Object>();
         ServletContext context = new MockServletContext();
 
-        boolean exposeBindStatus = false;
+        boolean exposeRequestContext = false;
 
-        StringTemplateView view = createTemplate(template, context, exposeBindStatus, "text/html");
+        StringTemplateView view = createTemplate(template, context, exposeRequestContext, "text/html");
         view.render(model, request, response);
 
+        verify(template, never()).setAttribute(eq(StringTemplateView.THEME_MESSAGES_KEY), anyObject());
         verify(template, never()).setAttribute(eq(StringTemplateView.BIND_STATUS_KEY), anyObject());
+        verify(template, never()).setAttribute(eq(StringTemplateView.MESSAGES_KEY), anyObject());
     }
 
     @Test
-    public void shouldExposeBindStatusWhenConfiguredToExpose() throws Exception {
+    public void shouldExposeRequestContextWhenConfiguredToExpose() throws Exception {
         WebApplicationContext wac = mock(WebApplicationContext.class);
         WebStringTemplate template = mock(WebStringTemplate.class);
 
@@ -180,12 +182,14 @@ public class StringTemplateViewTests {
         MockServletContext context = new MockServletContext();
         context.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, wac);
 
-        boolean exposeBindStatus = true;
+        boolean exposeRequestContext = true;
 
-        StringTemplateView view = createTemplate(template, context, exposeBindStatus, "text/html");
+        StringTemplateView view = createTemplate(template, context, exposeRequestContext, "text/html");
         view.render(model, request, response);
 
+        verify(template).setAttribute(eq(StringTemplateView.THEME_MESSAGES_KEY), isA(ThemeMessagesMap.class));
         verify(template).setAttribute(eq(StringTemplateView.BIND_STATUS_KEY), isA(BindStatusMap.class));
+        verify(template).setAttribute(eq(StringTemplateView.MESSAGES_KEY), isA(MessagesMap.class));
     }
 
     @Test
@@ -225,10 +229,10 @@ public class StringTemplateViewTests {
     }
 
     private StringTemplateView createTemplate(WebStringTemplate template, ServletContext context,
-                                              boolean exposeBindStatus, String contentType) {
+                                              boolean exposeRequestContext, String contentType) {
 
         StringTemplateView view = new StringTemplateView();
-        view.setExposeBindStatus(exposeBindStatus);
+        view.setExposeRequestContext(exposeRequestContext);
         view.setContentType(contentType);
         view.setServletContext(context);
         view.setTemplate(template);
