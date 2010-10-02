@@ -8,7 +8,7 @@
 <body class="$bodyClass()$">
 <div id="container">
     <div id="header">
-        <h1>$title$</h1>
+        <h1>$themeMessages.("theme.prefix").to_s$ $title$</h1>
     </div>
     <div id="content">
         $body;format="none"$

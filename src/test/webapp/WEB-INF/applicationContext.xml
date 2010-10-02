@@ -5,8 +5,16 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
                            http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-    <bean id="messageSource" p:basename="messages"
+    <bean id="messageSource"
+          p:basename="exampleMessages"
           class="org.springframework.context.support.ResourceBundleMessageSource" />
+
+    <bean id="themeSource"
+          class="org.springframework.ui.context.support.ResourceBundleThemeSource" />
+
+    <bean id="themeResolver"
+          p:defaultThemeName="exampleTheme"
+          class="org.springframework.web.servlet.theme.FixedThemeResolver" />
 
     <bean id="templateErrorListener"
           class="com.watchitlater.spring.log.Slf4jStringTemplateErrorListener" />

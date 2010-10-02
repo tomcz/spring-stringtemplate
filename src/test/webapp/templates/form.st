@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>$messages.formTitle.to_s$</title>
+    <title>$messages.formTitle.to_s$ $themeMessages.("theme.suffix").to_s$</title>
 </head>
 <body class="form">
 <form id="testForm" action="$servlet$$formAction$" method="get">
