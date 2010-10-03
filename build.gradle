@@ -1,0 +1,34 @@
+apply plugin: 'java'
+
+version = 1.2
+
+defaultTasks 'clean', 'build', 'srcJar'
+
+dependencies {
+  compile fileTree(dir: 'lib/buildtime', include: '*.jar')
+  compile fileTree(dir: 'lib/runtime', include: '*.jar')
+}
+
+jar {
+  manifest {
+    attributes 'Implementation-Title': project.name, 'Implementation-Version': version
+  }
+  metaInf {
+    from(projectDir) {
+      include 'LICENSE'
+    }
+  }
+}
+
+task srcJar(type: Jar) {
+  from 'src/main/java'
+  classifier = 'src'
+  manifest {
+    attributes 'Implementation-Title': project.name, 'Implementation-Version': version
+  }
+  metaInf {
+    from(projectDir) {
+      include 'LICENSE'
+    }
+  }
+}
