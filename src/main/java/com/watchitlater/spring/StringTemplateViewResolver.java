@@ -146,7 +146,7 @@ public class StringTemplateViewResolver implements ViewResolver, ResourceLoaderA
         return useGroupCache ? getCachedGroup(viewName) : createGroup();
     }
 
-    private WebStringTemplateGroup getCachedGroup(String viewName) {
+    protected WebStringTemplateGroup getCachedGroup(String viewName) {
         WebStringTemplateGroup group = groupCache.get(viewName);
         if (group == null) {
             group = createGroup();
