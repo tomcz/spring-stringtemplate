@@ -1,11 +1,13 @@
 package com.watchitlater.spring;
 
 import org.antlr.stringtemplate.StringTemplateErrorListener;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.Ordered;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.servlet.ViewResolver;
+import org.springframework.web.servlet.view.UrlBasedViewResolver;
 
 import javax.servlet.ServletContext;
 import java.util.Collections;
@@ -106,6 +108,9 @@ public class StringTemplateViewResolver implements ViewResolver, ResourceLoaderA
     }
 
     public StringTemplateView resolveViewName(String viewName, Locale locale) {
+        if (shouldNotResolve(viewName)) {
+            return null;
+        }
         try {
             WebStringTemplate tempate = createTemplate(viewName);
             StringTemplateView view = createView();
@@ -115,6 +120,12 @@ public class StringTemplateViewResolver implements ViewResolver, ResourceLoaderA
         } catch (IllegalArgumentException e) {
             return null;
         }
+    }
+
+    protected boolean shouldNotResolve(String viewName) {
+        return StringUtils.isBlank(viewName)
+                || StringUtils.startsWith(viewName, UrlBasedViewResolver.FORWARD_URL_PREFIX)
+                || StringUtils.startsWith(viewName, UrlBasedViewResolver.REDIRECT_URL_PREFIX);
     }
 
     protected StringTemplateView createView() {
