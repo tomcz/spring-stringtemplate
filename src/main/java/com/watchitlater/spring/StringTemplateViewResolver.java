@@ -11,59 +11,58 @@ import javax.servlet.ServletContext;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class StringTemplateViewResolver implements ViewResolver, ResourceLoaderAware, ServletContextAware, Ordered {
 
-    protected ResourceLoader resourceLoader;
-    protected ServletContext servletContext;
+    // WebStringTemplateGroup
+
+    protected Map<String, WebStringTemplateGroup> groupCache = new ConcurrentHashMap<String, WebStringTemplateGroup>();
+    protected boolean useGroupCache = false;
 
     protected StringTemplateErrorListener templateErrorListener;
+    protected Integer refreshIntervalInSeconds;
     protected String sourceFileCharEncoding;
 
-    protected List<Renderer> renderers = Collections.emptyList();
-    protected String contentType = "text/html;charset=UTF-8";
-    protected WebFormat defaultFormat = WebFormat.html;
-    protected boolean exposeRequestContext = true;
-    protected boolean autoIndent = true;
+    protected ResourceLoader resourceLoader;
     protected String templateRoot = "";
     protected String sharedRoot;
 
+    // WebStringTemplate
+
+    protected List<Renderer> renderers = Collections.emptyList();
+    protected WebFormat defaultFormat = WebFormat.html;
+
+    // StringTemplateView
+
+    protected ServletContext servletContext;
+    protected String contentType = "text/html;charset=UTF-8";
+    protected boolean exposeRequestContext = true;
+    protected boolean autoIndent = true;
+
+    // Ordered
+
     protected int order = 1;
 
-    public void setResourceLoader(ResourceLoader resourceLoader) {
-        this.resourceLoader = resourceLoader;
-    }
-
-    public void setServletContext(ServletContext servletContext) {
-        this.servletContext = servletContext;
+    public void setUseGroupCache(boolean useGroupCache) {
+        this.useGroupCache = useGroupCache;
     }
 
     public void setTemplateErrorListener(StringTemplateErrorListener templateErrorListener) {
         this.templateErrorListener = templateErrorListener;
     }
 
+    public void setRefreshIntervalInSeconds(Integer refreshIntervalInSeconds) {
+        this.refreshIntervalInSeconds = refreshIntervalInSeconds;
+    }
+
     public void setSourceFileCharEncoding(String sourceFileCharEncoding) {
         this.sourceFileCharEncoding = sourceFileCharEncoding;
     }
 
-    public void setExposeRequestContext(boolean exposeRequestContext) {
-        this.exposeRequestContext = exposeRequestContext;
-    }
-
-    public void setAutoIndent(boolean autoIndent) {
-        this.autoIndent = autoIndent;
-    }
-
-    public void setDefaultFormat(String defaultFormat) {
-        this.defaultFormat = WebFormat.fromName(defaultFormat);
-    }
-
-    public void setRenderers(List<Renderer> renderers) {
-        this.renderers = renderers;
-    }
-
-    public void setContentType(String contentType) {
-        this.contentType = contentType;
+    public void setResourceLoader(ResourceLoader resourceLoader) {
+        this.resourceLoader = resourceLoader;
     }
 
     public void setTemplateRoot(String templateRoot) {
@@ -72,6 +71,30 @@ public class StringTemplateViewResolver implements ViewResolver, ResourceLoaderA
 
     public void setSharedRoot(String sharedRoot) {
         this.sharedRoot = sharedRoot;
+    }
+
+    public void setRenderers(List<Renderer> renderers) {
+        this.renderers = renderers;
+    }
+
+    public void setDefaultFormat(String defaultFormat) {
+        this.defaultFormat = WebFormat.fromName(defaultFormat);
+    }
+
+    public void setServletContext(ServletContext servletContext) {
+        this.servletContext = servletContext;
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
+    }
+
+    public void setExposeRequestContext(boolean exposeRequestContext) {
+        this.exposeRequestContext = exposeRequestContext;
+    }
+
+    public void setAutoIndent(boolean autoIndent) {
+        this.autoIndent = autoIndent;
     }
 
     public void setOrder(int order) {
@@ -107,7 +130,7 @@ public class StringTemplateViewResolver implements ViewResolver, ResourceLoaderA
     }
 
     protected WebStringTemplate createTemplate(String viewName) {
-        WebStringTemplate template = createGroup().createTemplate(viewName);
+        WebStringTemplate template = createGroup(viewName).createTemplate(viewName);
         template.setDefaultFormat(defaultFormat);
         registerAttributeRenderers(template);
         return template;
@@ -117,6 +140,19 @@ public class StringTemplateViewResolver implements ViewResolver, ResourceLoaderA
         for (Renderer renderer : renderers) {
             template.register(renderer);
         }
+    }
+
+    protected WebStringTemplateGroup createGroup(String viewName) {
+        return useGroupCache ? getCachedGroup(viewName) : createGroup();
+    }
+
+    private WebStringTemplateGroup getCachedGroup(String viewName) {
+        WebStringTemplateGroup group = groupCache.get(viewName);
+        if (group == null) {
+            group = createGroup();
+            groupCache.put(viewName, group);
+        }
+        return group;
     }
 
     protected WebStringTemplateGroup createGroup() {
@@ -131,6 +167,9 @@ public class StringTemplateViewResolver implements ViewResolver, ResourceLoaderA
     }
 
     protected void initGroup(WebStringTemplateGroup group) {
+        if (refreshIntervalInSeconds != null) {
+            group.setRefreshInterval(refreshIntervalInSeconds);
+        }
         if (sourceFileCharEncoding != null) {
             group.setFileCharEncoding(sourceFileCharEncoding);
         }

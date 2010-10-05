@@ -29,6 +29,10 @@
         <servlet-name>sitemesh</servlet-name>
         <servlet-class>com.watchitlater.spring.sitemesh.StringTemplateDecoratorServlet</servlet-class>
         <init-param>
+            <param-name>useGroupCache</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <init-param>
             <param-name>sharedRoot</param-name>
             <param-value>/shared</param-value>
         </init-param>

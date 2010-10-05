@@ -15,6 +15,7 @@
           p:templateErrorListener-ref="templateErrorListener"
           p:templateRoot="/templates"
           p:sharedRoot="/shared"
+          p:useGroupCache="true"
           p:order="1" />
 
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver"
