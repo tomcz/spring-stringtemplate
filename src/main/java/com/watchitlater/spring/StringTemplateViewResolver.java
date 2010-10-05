@@ -124,8 +124,8 @@ public class StringTemplateViewResolver implements ViewResolver, ResourceLoaderA
 
     protected boolean shouldNotResolve(String viewName) {
         return StringUtils.isBlank(viewName)
-                || StringUtils.startsWith(viewName, UrlBasedViewResolver.FORWARD_URL_PREFIX)
-                || StringUtils.startsWith(viewName, UrlBasedViewResolver.REDIRECT_URL_PREFIX);
+                || viewName.startsWith(UrlBasedViewResolver.FORWARD_URL_PREFIX)
+                || viewName.startsWith(UrlBasedViewResolver.REDIRECT_URL_PREFIX);
     }
 
     protected StringTemplateView createView() {
