@@ -21,13 +21,13 @@ public class StringTemplateViewResolver implements ViewResolver, ResourceLoaderA
     // WebStringTemplateGroup
 
     protected Map<String, WebStringTemplateGroup> groupCache = new ConcurrentHashMap<String, WebStringTemplateGroup>();
+    protected Integer refreshIntervalInSeconds;
     protected boolean useGroupCache = false;
 
     protected StringTemplateErrorListener templateErrorListener;
-    protected Integer refreshIntervalInSeconds;
-    protected String sourceFileCharEncoding;
 
     protected ResourceLoader resourceLoader;
+    protected String sourceFileCharEncoding;
     protected String templateRoot = "";
     protected String sharedRoot;
 
