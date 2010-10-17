@@ -26,7 +26,7 @@ public class WebStringTemplate extends StringTemplate {
     }
 
     public void register(Renderer renderer) {
-        registerRenderer(renderer.getTypeToRender(), new RendererAdaptor(renderer));
+        registerRenderer(renderer.getTypeToRender(), renderer);
     }
 
     public void write(Writer out, boolean indent) throws IOException {

@@ -1,10 +1,7 @@
 package com.watchitlater.spring;
 
-public interface Renderer {
+import org.antlr.stringtemplate.AttributeRenderer;
 
+public interface Renderer extends AttributeRenderer {
     Class getTypeToRender();
-
-    public String toString(Object obj);
-
-    public String toString(Object obj, String formatName);
 }
