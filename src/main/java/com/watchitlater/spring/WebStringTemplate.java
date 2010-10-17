@@ -10,10 +10,14 @@ import java.io.Writer;
 
 public class WebStringTemplate extends StringTemplate {
 
-    private WebAttributeRenderer defaultRenderer = new WebAttributeRenderer(WebFormat.html);
+    private WebAttributeRenderer defaultRenderer = new WebAttributeRenderer();
 
-    public void setDefaultFormat(WebFormat defaultFormat) {
-        defaultRenderer = new WebAttributeRenderer(defaultFormat);
+    public void setDefaultFormat(WebFormat format) {
+        defaultRenderer.setDefaultFormat(format);
+    }
+
+    public void setEncoder(WebFormat format, Encoder encoder) {
+        defaultRenderer.setEncoder(format, encoder);
     }
 
     public AttributeRenderer getAttributeRenderer(Class aClass) {
