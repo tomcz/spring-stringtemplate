@@ -15,6 +15,7 @@
         </tr>
     </table>
     <p>$messages.(["message.with.arguments", arg1, "? & ?", arg2])$</p>
+    <p>$messages.("unknown message code");format="url"$</p>
     <p>$messages.("unknown.message.code")$</p>
 </form>
 </body>

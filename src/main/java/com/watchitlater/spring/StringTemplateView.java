@@ -76,7 +76,6 @@ public class StringTemplateView implements View {
         exposeRequestContext(request, response, model);
 
         response.setContentType(getContentType());
-        template.setEncoder(WebFormat.url, new ResponseUrlEncoder(response));
 
         template.write(response.getWriter(), autoIndent);
     }
