@@ -15,3 +15,10 @@ Runtime dependencies:
 - springframework 3.x (required)
 - commons-lang 2.7.7 (required)
 - sitemesh 2.4.1 (optional)
+
+==============================
+Maven support
+
+Run mvn install, that will run the tests, package it and install it to your local repository
+
+You can also run mvn cobertura:cobertura for testing your tests
