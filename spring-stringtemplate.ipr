@@ -111,14 +111,6 @@
     <find-history />
   </component>
   <component name="libraryTable">
-    <library name="runtime">
-      <CLASSES>
-        <root url="file://$PROJECT_DIR$/lib/runtime" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES />
-      <jarDirectory url="file://$PROJECT_DIR$/lib/runtime" recursive="false" />
-    </library>
     <library name="buildtime">
       <CLASSES>
         <root url="file://$PROJECT_DIR$/lib/buildtime" />
@@ -126,6 +118,14 @@
       <JAVADOC />
       <SOURCES />
       <jarDirectory url="file://$PROJECT_DIR$/lib/buildtime" recursive="false" />
+    </library>
+    <library name="runtime">
+      <CLASSES>
+        <root url="file://$PROJECT_DIR$/lib/runtime" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+      <jarDirectory url="file://$PROJECT_DIR$/lib/runtime" recursive="false" />
     </library>
   </component>
 </project>
