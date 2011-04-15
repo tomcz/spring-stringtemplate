@@ -9,19 +9,6 @@
     <artifactId>spring-stringtemplate</artifactId>
     <version>1.4</version>
 
-    <repositories>
-        <repository>
-            <id>com.springsource.repository.bundles.release</id>
-            <name>EBR Spring Release Repository</name>
-            <url>http://repository.springsource.com/maven/bundles/release</url>
-        </repository>
-        <repository>
-            <id>com.springsource.repository.bundles.external</id>
-            <name>EBR External Release Repository</name>
-            <url>http://repository.springsource.com/maven/bundles/external</url>
-        </repository>
-    </repositories>
-
     <dependencies>
 
         <dependency>
@@ -33,8 +20,14 @@
 
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>org.springframework.web.servlet</artifactId>
+            <artifactId>spring-webmvc</artifactId>
             <version>3.0.5.RELEASE</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -86,7 +79,7 @@
 
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>org.springframework.test</artifactId>
+            <artifactId>spring-test</artifactId>
             <version>3.0.5.RELEASE</version>
             <scope>test</scope>
         </dependency>
