@@ -132,7 +132,7 @@
 
     <target name="cobertura" depends="clean,make-jars" description="Create Cobertura code coverage report.">
         <artifact:dependencies pathId="cobertura.classpath" useScope="test">
-            <pom file="cobertura.xml" />
+            <pom file="tools.xml" />
         </artifact:dependencies>
         <taskdef classpathref="cobertura.classpath" resource="tasks.properties" />
 
