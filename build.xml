@@ -1,5 +1,9 @@
 <?xml version="1.0"?>
-<project name="spring-stringtemplate" default="build" basedir=".">
+<project name="spring-stringtemplate" default="build" basedir="." xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+
+    <typedef resource="org/apache/maven/artifact/ant/antlib.xml" uri="antlib:org.apache.maven.artifact.ant">
+        <classpath location="bootstrap/maven-ant-tasks-2.1.2.jar" />
+    </typedef>
 
     <property name="build.version" value="1.4" />
     <property name="application.name" value="${ant.project.name}-${build.version}" />
@@ -16,36 +20,18 @@
     <property name="cobertura.classes.dir" location="${cobertura.dir}/classes" />
     <property name="cobertura.datafile" location="${cobertura.dir}/cobertura.ser" />
 
-    <path id="classpath">
-        <fileset dir="${compile.dir}" includes="*.jar" />
-        <fileset dir="lib/buildtime" includes="*.jar" />
-        <fileset dir="lib/runtime" includes="*.jar" />
-    </path>
-
-    <path id="cobertura.classpath">
-        <fileset dir="lib/cobertura" includes="*.jar" />
-    </path>
-
-    <taskdef classpathref="cobertura.classpath" resource="tasks.properties" />
-
-    <target name="build"
-            depends="clean,run-tests,check-tests,make-src-jar"
-            description="Build JARs, run unit tests and create coverage reports." />
-
-    <target name="cobertura"
-            depends="clean,make-jars,cobertura-instrument,cobertura-tests,cobertura-report"
-            description="Create Cobertura code coverage report." />
-
-    <target name="clean">
-        <delete dir="${build.dir}" />
-    </target>
-
     <macrodef name="make-jar">
         <attribute name="srcdir" />
         <attribute name="jarfile" />
+        <attribute name="classpath" />
         <sequential>
             <mkdir dir="${compile.dir}/classes" />
-            <javac srcdir="@{srcdir}" destdir="${compile.dir}/classes" classpathref="classpath" debug="yes" />
+            <javac srcdir="@{srcdir}" destdir="${compile.dir}/classes" includeantruntime="no" debug="yes">
+                <classpath>
+                    <fileset dir="${compile.dir}" includes="*.jar" />
+                    <path refid="@{classpath}" />
+                </classpath>
+            </javac>
             <copy todir="${compile.dir}/classes" includeemptydirs="no">
                 <fileset dir="@{srcdir}" excludes="**/*.java" />
             </copy>
@@ -60,15 +46,33 @@
         </sequential>
     </macrodef>
 
-    <target name="make-jars">
-        <make-jar srcdir="${src.dir}" jarfile="${application.name}.jar" />
-        <make-jar srcdir="${test.dir}" jarfile="${application.name}-tests.jar" />
+    <target name="build"
+            depends="clean,run-tests,check-tests,make-sources-jar,make-javadoc-jar"
+            description="Build JARs, run unit tests and create coverage reports." />
+
+    <target name="clean">
+        <delete dir="${build.dir}" />
+    </target>
+
+    <target name="fetch-libs" description="Fetch third-party libraries.">
+        <artifact:pom id="pom" file="pom.xml" />
+        <artifact:dependencies pomRefId="pom" pathId="test.classpath" useScope="test" />
+        <artifact:dependencies pomRefId="pom" pathId="compile.classpath" useScope="compile" />
+        <artifact:dependencies pomRefId="pom" filesetId="runtime.libs" useScope="runtime" />
+    </target>
+
+    <target name="make-jars" depends="fetch-libs">
+        <make-jar srcdir="${src.dir}" jarfile="${application.name}.jar" classpath="compile.classpath" />
+        <make-jar srcdir="${test.dir}" jarfile="${application.name}-tests.jar" classpath="test.classpath" />
     </target>
 
     <target name="run-tests" depends="make-jars" description="Run all tests. Use -Dtestcase=SomeTestClassName to specify a single test.">
         <mkdir dir="${report.dir}" />
-        <junit fork="yes" forkmode="once" printsummary="yes" haltonfailure="no" failureproperty="unit.tests.failed">
-            <classpath refid="classpath" />
+        <junit fork="yes" forkmode="once" printsummary="yes" haltonfailure="no" failureproperty="tests.failed">
+            <classpath>
+                <fileset dir="${compile.dir}" includes="*.jar" />
+                <path refid="test.classpath" />
+            </classpath>
             <formatter type="xml" />
             <batchtest if="testcase" todir="${report.dir}">
                 <fileset dir="${test.dir}">
@@ -83,7 +87,7 @@
         </junit>
     </target>
 
-    <target name="check-tests" if="unit.tests.failed">
+    <target name="check-tests" if="tests.failed">
         <junitreport todir="${report.dir}">
             <fileset dir="${report.dir}" includes="TEST-*.xml" />
             <report todir="${report.dir}/html" />
@@ -91,38 +95,9 @@
         <fail message="One or more tests failed. Please check the test report for more info." />
     </target>
 
-    <target name="cobertura-instrument">
-        <mkdir dir="${cobertura.classes.dir}" />
-        <cobertura-instrument todir="${cobertura.classes.dir}" datafile="${cobertura.datafile}">
-            <fileset dir="${compile.dir}" excludes="*-tests.jar" />
-        </cobertura-instrument>
-    </target>
-
-    <target name="cobertura-tests">
-        <junit fork="yes" forkmode="once" printsummary="yes" haltonfailure="no">
-            <sysproperty key="net.sourceforge.cobertura.datafile" file="${cobertura.datafile}" />
-            <classpath>
-                <fileset dir="${cobertura.classes.dir}" />
-                <path refid="classpath" />
-                <path refid="cobertura.classpath" />
-            </classpath>
-            <batchtest unless="testcase">
-                <fileset dir="${test.dir}">
-                    <include name="**/*Tests.java" />
-                </fileset>
-            </batchtest>
-        </junit>
-    </target>
-
-    <target name="cobertura-report">
-        <mkdir dir="${cobertura.report.dir}" />
-        <cobertura-report format="html" datafile="${cobertura.datafile}"
-                          destdir="${cobertura.report.dir}" srcdir="${src.dir}" />
-    </target>
-
-    <target name="make-src-jar">
+    <target name="make-sources-jar">
         <mkdir dir="${compile.dir}" />
-        <jar destfile="${compile.dir}/${application.name}-src.jar" basedir="${src.dir}">
+        <jar destfile="${compile.dir}/${application.name}-sources.jar" basedir="${src.dir}">
             <metainf dir="${basedir}" includes="LICENSE" />
             <manifest>
                 <attribute name="Implementation-Title" value="${ant.project.name}" />
@@ -131,8 +106,59 @@
         </jar>
     </target>
 
+    <target name="make-javadoc-jar" depends="fetch-libs">
+        <mkdir dir="${compile.dir}/javadoc" />
+        <javadoc sourcepath="${src.dir}" destdir="${compile.dir}/javadoc" classpathref="compile.classpath"
+                 windowtitle="${application.name}" doctitle="${application.name}"
+                 footer="Copyright &#169; 2010, Thomas Czarniecki" />
+        <jar destfile="${compile.dir}/${application.name}-javadoc.jar" basedir="${compile.dir}/javadoc">
+            <metainf dir="${basedir}" includes="LICENSE" />
+            <manifest>
+                <attribute name="Implementation-Title" value="${ant.project.name}" />
+                <attribute name="Implementation-Version" value="${build.version}" />
+            </manifest>
+        </jar>
+        <delete dir="${compile.dir}/javadoc" />
+    </target>
+
     <target name="run-jetty" depends="make-jars" description="Run sample jetty web application.">
-        <java classname="com.watchitlater.spring.webapp.WebServer" fork="yes" failonerror="yes" classpathref="classpath" />
+        <java classname="com.watchitlater.spring.webapp.WebServer" fork="yes" failonerror="yes">
+            <classpath>
+                <fileset dir="${compile.dir}" includes="*.jar" />
+                <path refid="test.classpath" />
+            </classpath>
+        </java>
+    </target>
+
+    <target name="cobertura" depends="clean,make-jars" description="Create Cobertura code coverage report.">
+        <artifact:dependencies pathId="cobertura.classpath" useScope="test">
+            <pom file="cobertura.xml" />
+        </artifact:dependencies>
+        <taskdef classpathref="cobertura.classpath" resource="tasks.properties" />
+
+        <mkdir dir="${cobertura.classes.dir}" />
+        <cobertura-instrument todir="${cobertura.classes.dir}" datafile="${cobertura.datafile}">
+            <fileset dir="${compile.dir}" excludes="*-tests.jar" />
+        </cobertura-instrument>
+
+        <junit fork="yes" forkmode="once" printsummary="yes" haltonfailure="no">
+            <sysproperty key="net.sourceforge.cobertura.datafile" file="${cobertura.datafile}" />
+            <classpath>
+                <fileset dir="${cobertura.classes.dir}" />
+                <fileset dir="${compile.dir}" includes="*.jar" />
+                <path refid="test.classpath" />
+                <path refid="cobertura.classpath" />
+            </classpath>
+            <batchtest unless="testcase">
+                <fileset dir="${test.dir}">
+                    <include name="**/*Tests.java" />
+                </fileset>
+            </batchtest>
+        </junit>
+
+        <mkdir dir="${cobertura.report.dir}" />
+        <cobertura-report format="html" datafile="${cobertura.datafile}"
+                          destdir="${cobertura.report.dir}" srcdir="${src.dir}" />
     </target>
 
 </project>

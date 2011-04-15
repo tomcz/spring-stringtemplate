@@ -8,7 +8,6 @@
     <groupId>com.watchitlater</groupId>
     <artifactId>spring-stringtemplate</artifactId>
     <version>1.4</version>
-    <packaging>jar</packaging>
 
     <repositories>
         <repository>
@@ -22,10 +21,6 @@
             <url>http://repository.springsource.com/maven/bundles/external</url>
         </repository>
     </repositories>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
 
     <dependencies>
 
@@ -58,12 +53,14 @@
             <groupId>opensymphony</groupId>
             <artifactId>sitemesh</artifactId>
             <version>2.4.2</version>
+            <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>1.6.1</version>
+            <optional>true</optional>
         </dependency>
 
         <dependency>
@@ -75,7 +72,7 @@
 
         <dependency>
             <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-nop</artifactId>
+            <artifactId>slf4j-simple</artifactId>
             <version>1.6.1</version>
             <scope>test</scope>
         </dependency>
@@ -142,22 +139,5 @@
         </dependency>
 
     </dependencies>
-
-    <build>
-        <finalName>spring-stringtemplate</finalName>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.5</version>
-                <configuration>
-                    <forkMode>once</forkMode>
-                    <includes>
-                        <include>**/*Tests.java</include>
-                    </includes>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>
