@@ -134,9 +134,9 @@
         <artifact:dependencies pathId="cobertura.classpath" useScope="test">
             <pom file="tools.xml" />
         </artifact:dependencies>
-        <taskdef classpathref="cobertura.classpath" resource="tasks.properties" />
 
         <mkdir dir="${cobertura.classes.dir}" />
+        <taskdef classpathref="cobertura.classpath" resource="tasks.properties" />
         <cobertura-instrument todir="${cobertura.classes.dir}" datafile="${cobertura.datafile}">
             <fileset dir="${compile.dir}" excludes="*-tests.jar" />
         </cobertura-instrument>
