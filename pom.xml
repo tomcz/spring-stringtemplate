@@ -8,6 +8,24 @@
     <groupId>com.watchitlater</groupId>
     <artifactId>spring-stringtemplate</artifactId>
     <version>1.4</version>
+    <packaging>jar</packaging>
+
+    <name>Spring-StringTemplate-SiteMesh</name>
+    <description>Library to provide StringTemplate integration into Spring MVC and SiteMesh</description>
+    <url>https://github.com/tomcz/spring-stringtemplate</url>
+
+    <licenses>
+        <license>
+            <name>The BSD License</name>
+            <url>http://www.opensource.org/licenses/bsd-license.php</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:git:git://github.com/tomcz/spring-stringtemplate.git</connection>
+        <url>git://github.com/tomcz/spring-stringtemplate.git</url>
+    </scm>
 
     <dependencies>
 
