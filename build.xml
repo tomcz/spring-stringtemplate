@@ -167,4 +167,19 @@
                           destdir="${cobertura.report.dir}" srcdir="${src.dir}" />
     </target>
 
+    <target name="make-pom" depends="fetch-libs">
+        <mkdir dir="${build.dir}" />
+        <loadfile srcfile="LICENSE" property="license.text" />
+        <property name="ivy.pom.version" value="${build.version}" />
+        <property name="ivy.pom.name" value="Spring-StringTemplate-SiteMesh" />
+        <property name="ivy.pom.url" value="https://github.com/tomcz/spring-stringtemplate" />
+        <property name="ivy.pom.license" value="&lt;--${line.separator}${license.text}--&gt;" />
+        <property name="ivy.pom.description" value="Library to provide StringTemplate integration into Spring MVC and SiteMesh" />
+        <makepom ivyfile="ivy.xml" pomfile="${build.dir}/pom.xml" conf="runtime,buildtime,provided" printivyinfo="no">
+            <mapping conf="runtime" scope="compile" />
+            <mapping conf="buildtime" scope="test" />
+            <mapping conf="provided" scope="provided" />
+        </makepom>
+    </target>
+
 </project>

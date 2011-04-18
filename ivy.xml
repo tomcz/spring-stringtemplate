@@ -1,6 +1,6 @@
 <ivy-module version="2.0">
 
-    <info organisation="example" module="spring-conversations" />
+    <info organisation="com.watchitlater" module="spring-conversations" />
 
     <configurations>
         <conf name="runtime" />
@@ -13,7 +13,6 @@
 
         <!-- runtime -->
 
-        <dependency org="org.slf4j" name="slf4j-api" rev="1.6.1" transitive="false" conf="runtime->default,sources" />
         <dependency org="commons-lang" name="commons-lang" rev="2.5" transitive="false" conf="runtime->default,sources" />
 
         <dependency org="org.antlr" name="stringtemplate" rev="3.2.1" conf="runtime->default,sources" />
@@ -28,6 +27,8 @@
         <!-- provided -->
 
         <dependency org="javax.servlet" name="servlet-api" rev="2.5" transitive="false" conf="provided->default,sources" />
+
+        <dependency org="org.slf4j" name="slf4j-api" rev="1.6.1" transitive="false" conf="provided->default,sources" />
 
         <!-- buildtime -->
 
