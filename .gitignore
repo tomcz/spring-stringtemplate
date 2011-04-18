@@ -2,3 +2,4 @@ target
 *.iws
 build
 out
+lib
