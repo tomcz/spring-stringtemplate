@@ -173,7 +173,7 @@
         <property name="ivy.pom.version" value="${build.version}" />
         <property name="ivy.pom.name" value="Spring-StringTemplate-SiteMesh" />
         <property name="ivy.pom.url" value="https://github.com/tomcz/spring-stringtemplate" />
-        <property name="ivy.pom.license" value="&lt;--${line.separator}${license.text}--&gt;" />
+        <property name="ivy.pom.license" value="&lt;!--${line.separator}${license.text}--&gt;" />
         <property name="ivy.pom.description" value="Library to provide StringTemplate integration into Spring MVC and SiteMesh" />
         <makepom ivyfile="ivy.xml" pomfile="${compile.dir}/pom.xml" conf="runtime,buildtime,provided" printivyinfo="no">
             <mapping conf="runtime" scope="compile" />
