@@ -6,14 +6,19 @@ import org.mortbay.jetty.webapp.WebAppContext;
 public class WebServer {
 
     private Server server;
+    private final int port;
 
     public WebServer(int port) {
-        server = new Server(port);
+        this.port = port;
     }
 
     public WebServer start() throws Exception {
+        System.setProperty("org.mortbay.xml.XmlParser.Validating", "false");
+
+        server = new Server(port);
         server.addHandler(new WebAppContext("src/test/webapp", "/stringtemplate"));
         server.start();
+
         return this;
     }
 
