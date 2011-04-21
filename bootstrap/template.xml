@@ -9,6 +9,7 @@ ${ivy.pom.license}
 
     <groupId>${ivy.pom.groupId}</groupId>
     <artifactId>${ivy.pom.artifactId}</artifactId>
+    <version>${ivy.pom.version}</version>
     <packaging>jar</packaging>
 
     <name>Spring-StringTemplate-SiteMesh</name>
