@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+${ivy.pom.license}
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>${ivy.pom.groupId}</groupId>
+    <artifactId>${ivy.pom.artifactId}</artifactId>
+    <packaging>jar</packaging>
+
+    <name>Spring-StringTemplate-SiteMesh</name>
+    <description>Library to provide StringTemplate integration for Spring MVC and SiteMesh</description>
+    <url>https://github.com/tomcz/spring-stringtemplate</url>
+
+    <licenses>
+        <license>
+            <name>The BSD License</name>
+            <url>https://github.com/tomcz/spring-stringtemplate/raw/master/LICENSE</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:git:git://github.com/tomcz/spring-stringtemplate.git</connection>
+        <url>git://github.com/tomcz/spring-stringtemplate.git</url>
+    </scm>
+
+</project>
