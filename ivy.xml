@@ -1,6 +1,6 @@
 <ivy-module version="2.0">
 
-    <info organisation="com.watchitlater" module="spring-stringtemplate" />
+    <info organisation="com.watchitlater" module="spring-stringtemplate" revision="1.5" />
 
     <configurations>
         <conf name="runtime" />

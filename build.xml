@@ -1,9 +1,6 @@
 <?xml version="1.0"?>
 <project name="spring-stringtemplate" default="build" basedir=".">
 
-    <property name="build.version" value="1.4" />
-    <property name="application.name" value="${ant.project.name}-${build.version}" />
-
     <property name="src.dir" location="src/main/java" />
     <property name="test.dir" location="src/test/java" />
 
@@ -34,8 +31,8 @@
             <jar destfile="${compile.dir}/@{jarfile}" basedir="${compile.dir}/classes">
                 <metainf dir="${basedir}" includes="LICENSE" />
                 <manifest>
-                    <attribute name="Implementation-Title" value="${ant.project.name}" />
-                    <attribute name="Implementation-Version" value="${build.version}" />
+                    <attribute name="Implementation-Title" value="${manifest.name}" />
+                    <attribute name="Implementation-Version" value="${manifest.version}" />
                 </manifest>
             </jar>
             <delete dir="${compile.dir}/classes" />
@@ -43,7 +40,7 @@
     </macrodef>
 
     <target name="build"
-            depends="clean,run-tests,check-tests,make-sources-jar,make-javadoc-jar,make-pom"
+            depends="clean,run-tests,check-tests,make-sources-jar,make-javadoc-jar,make-pom,make-zip"
             description="Build JARs, run unit tests and create coverage reports." />
 
     <target name="clean">
@@ -55,7 +52,7 @@
             <classpath location="bootstrap/ivy-2.2.0.jar" />
         </taskdef>
         <configure file="bootstrap/ivysettings.xml" />
-        <resolve />
+        <resolve file="ivy.xml" />
         <retrieve pattern="lib/[conf]/[type]/[artifact]-[revision].[ext]" sync="true" />
         <path id="compile.classpath">
             <fileset dir="lib/provided/jar" includes="*.jar" />
@@ -68,6 +65,9 @@
         <path id="cobertura.classpath">
             <fileset dir="lib/cobertura/jar" includes="*.jar" />
         </path>
+        <property name="manifest.name" value="${ivy.module}" />
+        <property name="manifest.version" value="${ivy.revision}" />
+        <property name="application.name" value="${ivy.module}-${ivy.revision}" />
     </target>
 
     <target name="make-jars" depends="fetch-libs">
@@ -109,8 +109,8 @@
         <jar destfile="${compile.dir}/${application.name}-sources.jar" basedir="${src.dir}">
             <metainf dir="${basedir}" includes="LICENSE" />
             <manifest>
-                <attribute name="Implementation-Title" value="${ant.project.name}" />
-                <attribute name="Implementation-Version" value="${build.version}" />
+                <attribute name="Implementation-Title" value="${manifest.name}" />
+                <attribute name="Implementation-Version" value="${manifest.version}" />
             </manifest>
         </jar>
     </target>
@@ -123,11 +123,37 @@
         <jar destfile="${compile.dir}/${application.name}-javadoc.jar" basedir="${compile.dir}/javadoc">
             <metainf dir="${basedir}" includes="LICENSE" />
             <manifest>
-                <attribute name="Implementation-Title" value="${ant.project.name}" />
-                <attribute name="Implementation-Version" value="${build.version}" />
+                <attribute name="Implementation-Title" value="${manifest.name}" />
+                <attribute name="Implementation-Version" value="${manifest.version}" />
             </manifest>
         </jar>
         <delete dir="${compile.dir}/javadoc" />
+    </target>
+
+    <target name="make-pom" depends="fetch-libs">
+        <mkdir dir="${compile.dir}" />
+        <loadfile srcfile="LICENSE" property="license.text" />
+        <property name="ivy.pom.license" value="${license.text}" />
+        <makepom ivyfile="ivy.xml"
+                 pomfile="${compile.dir}/pom.xml"
+                 conf="runtime,buildtime,provided"
+                 templatefile="bootstrap/template.xml">
+            <mapping conf="runtime" scope="compile" />
+            <mapping conf="buildtime" scope="test" />
+            <mapping conf="provided" scope="provided" />
+        </makepom>
+    </target>
+
+    <target name="make-zip">
+        <zip destfile="${build.dir}/${application.name}.zip">
+            <zipfileset prefix="${application.name}" dir="${basedir}">
+                <include name="README" />
+                <include name="LICENSE" />
+            </zipfileset>
+            <zipfileset prefix="${application.name}" dir="${compile.dir}">
+                <exclude name="*-tests.jar" />
+            </zipfileset>
+        </zip>
     </target>
 
     <target name="run-jetty" depends="make-jars" description="Run sample jetty web application.">
@@ -165,21 +191,6 @@
         <mkdir dir="${cobertura.report.dir}" />
         <cobertura-report format="html" datafile="${cobertura.datafile}"
                           destdir="${cobertura.report.dir}" srcdir="${src.dir}" />
-    </target>
-
-    <target name="make-pom" depends="fetch-libs">
-        <mkdir dir="${compile.dir}" />
-        <loadfile srcfile="LICENSE" property="license.text" />
-        <property name="ivy.pom.license" value="${license.text}" />
-        <property name="ivy.pom.version" value="${build.version}" />
-        <makepom ivyfile="ivy.xml"
-                 pomfile="${compile.dir}/pom.xml"
-                 conf="runtime,buildtime,provided"
-                 templatefile="bootstrap/template.xml">
-            <mapping conf="runtime" scope="compile" />
-            <mapping conf="buildtime" scope="test" />
-            <mapping conf="provided" scope="provided" />
-        </makepom>
     </target>
 
 </project>
