@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="spring-stringtemplate" default="build" basedir=".">
+<project name="spring-stringtemplate" default="build" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
 
     <property name="src.dir" location="src/main/java" />
     <property name="test.dir" location="src/test/java" />
@@ -48,12 +48,12 @@
     </target>
 
     <target name="fetch-libs" description="Fetch third-party libraries.">
-        <taskdef resource="org/apache/ivy/ant/antlib.xml">
+        <taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant">
             <classpath location="bootstrap/ivy-2.2.0.jar" />
         </taskdef>
-        <configure file="bootstrap/ivysettings.xml" />
-        <resolve file="ivy.xml" conf="compile,test,provided" />
-        <retrieve pattern="lib/[conf]/[type]/[artifact]-[revision].[ext]" sync="true" />
+        <ivy:configure file="bootstrap/ivysettings.xml" />
+        <ivy:resolve file="ivy.xml" conf="compile,test,provided,cobertura" />
+        <ivy:retrieve pattern="lib/[conf]/[type]/[artifact]-[revision].[ext]" sync="true" />
         <path id="compile.classpath">
             <fileset dir="lib/provided/jar" includes="*.jar" />
             <fileset dir="lib/compile/jar" includes="*.jar" />
@@ -135,10 +135,10 @@
         <mkdir dir="${compile.dir}" />
         <loadfile srcfile="LICENSE" property="license.text" />
         <property name="ivy.pom.license" value="${license.text}" />
-        <makepom ivyfile="ivy.xml"
-                 conf="compile,test,provided"
-                 pomfile="${compile.dir}/pom.xml"
-                 templatefile="bootstrap/template.xml" />
+        <ivy:makepom ivyfile="ivy.xml"
+                     conf="compile,test,provided"
+                     pomfile="${compile.dir}/pom.xml"
+                     templatefile="bootstrap/template.xml" />
     </target>
 
     <target name="make-zip">
@@ -188,6 +188,21 @@
         <mkdir dir="${cobertura.report.dir}" />
         <cobertura-report format="html" datafile="${cobertura.datafile}"
                           destdir="${cobertura.report.dir}" srcdir="${src.dir}" />
+    </target>
+
+    <target name="publish-build" depends="build" description="Publish build to local ivy repository.">
+        <copy file="${compile.dir}/${application.name}.jar"
+              tofile="${build.dir}/publish/jar/${manifest.name}.jar"
+              overwrite="yes" />
+        <copy file="${compile.dir}/${application.name}-sources.jar"
+              tofile="${build.dir}/publish/source/${manifest.name}.jar"
+              overwrite="yes" />
+        <copy file="${compile.dir}/${application.name}-javadoc.jar"
+              tofile="${build.dir}/publish/javadoc/${manifest.name}.jar"
+              overwrite="yes" />
+        <ivy:publish resolver="local" overwrite="yes">
+            <ivy:artifacts pattern="${build.dir}/publish/[type]/[artifact].[ext]" />
+        </ivy:publish>
     </target>
 
 </project>
