@@ -118,20 +118,27 @@
     <find-history />
   </component>
   <component name="libraryTable">
-    <library name="buildtime">
+    <library name="compile">
       <CLASSES>
-        <root url="file://$PROJECT_DIR$/lib/buildtime/jar" />
+        <root url="file://$PROJECT_DIR$/lib/compile/jar" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/lib/buildtime/source/jetty-6.1.22.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/buildtime/source/junit-4.8.2.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/buildtime/src/org.springframework.test-sources-3.0.5.RELEASE.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/buildtime/source/hamcrest-all-1.1.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/buildtime/source/mockito-core-1.8.5.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/buildtime/source/httpunit-1.7.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/compile/source/commons-lang-2.5.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/compile/source/stringtemplate-3.2.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/compile/src/org.springframework.context.support-sources-3.0.5.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/compile/src/org.springframework.context-sources-3.0.5.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/compile/src/org.springframework.web.servlet-sources-3.0.5.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/compile/src/com.springsource.org.aopalliance-sources-1.0.0.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/compile/src/org.springframework.beans-sources-3.0.5.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/compile/src/org.springframework.oxm-sources-3.0.5.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/compile/src/org.springframework.asm-sources-3.0.5.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/compile/src/org.springframework.web-sources-3.0.5.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/compile/src/org.springframework.core-sources-3.0.5.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/compile/src/org.springframework.aop-sources-3.0.5.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/compile/src/org.springframework.expression-sources-3.0.5.RELEASE.jar!/" />
       </SOURCES>
-      <jarDirectory url="file://$PROJECT_DIR$/lib/buildtime/jar" recursive="false" />
+      <jarDirectory url="file://$PROJECT_DIR$/lib/compile/jar" recursive="false" />
     </library>
     <library name="provided">
       <CLASSES>
@@ -144,27 +151,20 @@
       </SOURCES>
       <jarDirectory url="file://$PROJECT_DIR$/lib/provided/jar" recursive="false" />
     </library>
-    <library name="runtime">
+    <library name="test">
       <CLASSES>
-        <root url="file://$PROJECT_DIR$/lib/runtime/jar" />
+        <root url="file://$PROJECT_DIR$/lib/test/jar" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/lib/runtime/source/stringtemplate-3.2.1.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/runtime/source/commons-lang-2.5.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/runtime/src/org.springframework.core-sources-3.0.5.RELEASE.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/runtime/src/org.springframework.context.support-sources-3.0.5.RELEASE.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/runtime/src/org.springframework.context-sources-3.0.5.RELEASE.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/runtime/src/org.springframework.beans-sources-3.0.5.RELEASE.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/runtime/src/org.springframework.web.servlet-sources-3.0.5.RELEASE.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/runtime/src/org.springframework.web-sources-3.0.5.RELEASE.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/runtime/src/org.springframework.oxm-sources-3.0.5.RELEASE.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/runtime/src/org.springframework.expression-sources-3.0.5.RELEASE.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/runtime/src/com.springsource.org.aopalliance-sources-1.0.0.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/runtime/src/org.springframework.aop-sources-3.0.5.RELEASE.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/runtime/src/org.springframework.asm-sources-3.0.5.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/test/src/org.springframework.test-sources-3.0.5.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/test/source/httpunit-1.7.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/test/source/junit-4.8.2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/test/source/jetty-6.1.22.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/test/source/hamcrest-all-1.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/test/source/mockito-core-1.8.5.jar!/" />
       </SOURCES>
-      <jarDirectory url="file://$PROJECT_DIR$/lib/runtime/jar" recursive="false" />
+      <jarDirectory url="file://$PROJECT_DIR$/lib/test/jar" recursive="false" />
     </library>
   </component>
 </project>

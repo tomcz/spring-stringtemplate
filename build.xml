@@ -52,14 +52,14 @@
             <classpath location="bootstrap/ivy-2.2.0.jar" />
         </taskdef>
         <configure file="bootstrap/ivysettings.xml" />
-        <resolve file="ivy.xml" />
+        <resolve file="ivy.xml" conf="compile,test,provided" />
         <retrieve pattern="lib/[conf]/[type]/[artifact]-[revision].[ext]" sync="true" />
         <path id="compile.classpath">
             <fileset dir="lib/provided/jar" includes="*.jar" />
-            <fileset dir="lib/runtime/jar" includes="*.jar" />
+            <fileset dir="lib/compile/jar" includes="*.jar" />
         </path>
         <path id="test.classpath">
-            <fileset dir="lib/buildtime/jar" includes="*.jar" />
+            <fileset dir="lib/test/jar" includes="*.jar" />
             <path refid="compile.classpath" />
         </path>
         <path id="cobertura.classpath">
@@ -75,7 +75,8 @@
         <make-jar srcdir="${test.dir}" jarfile="${application.name}-tests.jar" classpath="test.classpath" />
     </target>
 
-    <target name="run-tests" depends="make-jars" description="Run all tests. Use -Dtestcase=SomeTestClassName to specify a single test.">
+    <target name="run-tests" depends="make-jars" unless="skip.tests"
+            description="Run all tests. Use -Dtestcase=SomeTestClassName to specify a single test.">
         <mkdir dir="${report.dir}" />
         <junit fork="yes" forkmode="once" printsummary="yes" haltonfailure="no" failureproperty="tests.failed">
             <classpath>
@@ -135,13 +136,9 @@
         <loadfile srcfile="LICENSE" property="license.text" />
         <property name="ivy.pom.license" value="${license.text}" />
         <makepom ivyfile="ivy.xml"
+                 conf="compile,test,provided"
                  pomfile="${compile.dir}/pom.xml"
-                 conf="runtime,buildtime,provided"
-                 templatefile="bootstrap/template.xml">
-            <mapping conf="runtime" scope="compile" />
-            <mapping conf="buildtime" scope="test" />
-            <mapping conf="provided" scope="provided" />
-        </makepom>
+                 templatefile="bootstrap/template.xml" />
     </target>
 
     <target name="make-zip">

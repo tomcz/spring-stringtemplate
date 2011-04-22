@@ -1,49 +1,59 @@
-<ivy-module version="2.0">
+<ivy-module version="2.0" xmlns:m="http://ant.apache.org/ivy/maven">
 
     <info organisation="com.watchitlater" module="spring-stringtemplate" revision="1.5" />
 
     <configurations>
-        <conf name="runtime" />
-        <conf name="buildtime" />
-        <conf name="provided" />
-        <conf name="cobertura" />
+        <conf name="master" visibility="public" />
+        <conf name="compile" visibility="public" />
+        <conf name="runtime" visibility="public" extends="compile" />
+        <conf name="default" visibility="public" extends="runtime,master" />
+        <conf name="provided" visibility="public" />
+        <conf name="sources" visibility="public" />
+        <conf name="javadoc" visibility="public" />
+        <conf name="test" visibility="private" />
+        <conf name="cobertura" visibility="private" />
     </configurations>
+
+    <publications>
+        <artifact type="jar" ext="jar" conf="master" />
+        <artifact type="source" ext="jar" conf="sources" m:classifier="sources" />
+        <artifact type="javadoc" ext="jar" conf="javadoc" m:classifier="javadoc" />
+    </publications>
 
     <dependencies>
 
-        <!-- runtime -->
+        <!-- compile -->
 
-        <dependency org="org.antlr" name="stringtemplate" rev="3.2.1" conf="runtime->default,sources" />
+        <dependency org="org.antlr" name="stringtemplate" rev="3.2.1" conf="compile->default,sources" />
 
-        <dependency org="opensymphony" name="sitemesh" rev="2.4.2" conf="runtime->default,sources" />
+        <dependency org="opensymphony" name="sitemesh" rev="2.4.2" conf="compile->default,sources" />
 
-        <dependency org="commons-lang" name="commons-lang" rev="2.5" transitive="false" conf="runtime->default,sources" />
+        <dependency org="commons-lang" name="commons-lang" rev="2.5" transitive="false" conf="compile->default,sources" />
 
-        <dependency org="org.springframework" name="org.springframework.web.servlet" rev="3.0.5.RELEASE" conf="runtime->runtime">
+        <dependency org="org.springframework" name="org.springframework.web.servlet" rev="3.0.5.RELEASE" conf="compile->runtime">
             <exclude org="org.apache.commons" />
             <exclude ext="txt" />
         </dependency>
 
-        <!-- buildtime -->
+        <!-- test -->
 
-        <dependency org="junit" name="junit" rev="4.8.2" transitive="false" conf="buildtime->default,sources" />
+        <dependency org="junit" name="junit" rev="4.8.2" transitive="false" conf="test->default,sources" />
 
-        <dependency org="org.hamcrest" name="hamcrest-all" rev="1.1" transitive="false" conf="buildtime->default,sources" />
-        <dependency org="org.mockito" name="mockito-core" rev="1.8.5" conf="buildtime->default,sources">
+        <dependency org="org.hamcrest" name="hamcrest-all" rev="1.1" transitive="false" conf="test->default,sources" />
+        <dependency org="org.mockito" name="mockito-core" rev="1.8.5" conf="test->default,sources">
             <exclude name="hamcrest-core" />
         </dependency>
 
-        <dependency org="rhino" name="js" rev="1.6R5" transitive="false" conf="buildtime->default" />
-        <dependency org="httpunit" name="httpunit" rev="1.7" conf="buildtime->default,sources">
+        <dependency org="rhino" name="js" rev="1.6R5" transitive="false" conf="test->default" />
+        <dependency org="httpunit" name="httpunit" rev="1.7" conf="test->default,sources">
             <exclude name="servlet-api" />
         </dependency>
 
-        <dependency org="org.mortbay.jetty" name="jetty" rev="6.1.22" conf="buildtime->default,sources">
+        <dependency org="org.mortbay.jetty" name="jetty" rev="6.1.22" conf="test->default,sources">
             <exclude name="servlet-api" />
         </dependency>
 
-        <dependency org="org.springframework" name="org.springframework.test" rev="3.0.5.RELEASE"
-                    transitive="false" conf="buildtime->runtime">
+        <dependency org="org.springframework" name="org.springframework.test" rev="3.0.5.RELEASE" transitive="false" conf="test->runtime">
             <exclude ext="txt" />
         </dependency>
 
