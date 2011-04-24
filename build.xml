@@ -78,12 +78,11 @@
     <target name="run-tests" depends="make-jars" unless="skip.tests"
             description="Run all tests. Use -Dtestcase=SomeTestClassName to specify a single test.">
         <mkdir dir="${report.dir}" />
-        <junit fork="yes" forkmode="once" printsummary="no" haltonfailure="no" failureproperty="tests.failed">
+        <junit fork="yes" forkmode="once" printsummary="yes" haltonfailure="no" failureproperty="tests.failed">
             <classpath>
                 <fileset dir="${compile.dir}" includes="*.jar" />
                 <path refid="test.classpath" />
             </classpath>
-            <formatter type="brief" usefile="no" />
             <formatter type="xml" />
             <batchtest if="testcase" todir="${report.dir}">
                 <fileset dir="${test.dir}">
