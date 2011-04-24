@@ -1,6 +1,6 @@
 <ivy-module version="2.0" xmlns:m="http://ant.apache.org/ivy/maven">
 
-    <info organisation="com.watchitlater" module="spring-stringtemplate" revision="1.5" />
+    <info organisation="com.watchitlater" module="spring-stringtemplate" revision="1.5.1" />
 
     <configurations>
         <conf name="master" visibility="public" />
@@ -30,9 +30,8 @@
 
         <dependency org="commons-lang" name="commons-lang" rev="2.5" transitive="false" conf="compile->default,sources" />
 
-        <dependency org="org.springframework" name="org.springframework.web.servlet" rev="3.0.5.RELEASE" conf="compile->runtime">
-            <exclude org="org.apache.commons" />
-            <exclude ext="txt" />
+        <dependency org="org.springframework" name="spring-webmvc" rev="3.0.5.RELEASE" conf="compile->default,sources">
+            <exclude name="commons-logging" />
         </dependency>
 
         <!-- test -->
@@ -53,9 +52,7 @@
             <exclude name="servlet-api" />
         </dependency>
 
-        <dependency org="org.springframework" name="org.springframework.test" rev="3.0.5.RELEASE" transitive="false" conf="test->runtime">
-            <exclude ext="txt" />
-        </dependency>
+        <dependency org="org.springframework" name="spring-test" rev="3.0.5.RELEASE" transitive="false" conf="test->default,sources" />
 
         <!-- provided -->
 

@@ -31,8 +31,8 @@
             <jar destfile="${compile.dir}/@{jarfile}" basedir="${compile.dir}/classes">
                 <metainf dir="${basedir}" includes="LICENSE" />
                 <manifest>
-                    <attribute name="Implementation-Title" value="${manifest.name}" />
-                    <attribute name="Implementation-Version" value="${manifest.version}" />
+                    <attribute name="Implementation-Title" value="${application.name}" />
+                    <attribute name="Implementation-Version" value="${application.version}" />
                 </manifest>
             </jar>
             <delete dir="${compile.dir}/classes" />
@@ -51,7 +51,7 @@
         <taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant">
             <classpath location="bootstrap/ivy-2.2.0.jar" />
         </taskdef>
-        <ivy:configure file="bootstrap/ivysettings.xml" />
+        <ivy:configure />
         <ivy:resolve file="ivy.xml" conf="compile,test,provided,cobertura" />
         <ivy:retrieve pattern="lib/[conf]/[type]/[artifact]-[revision].[ext]" sync="true" />
         <path id="compile.classpath">
@@ -65,14 +65,14 @@
         <path id="cobertura.classpath">
             <fileset dir="lib/cobertura/jar" includes="*.jar" />
         </path>
-        <property name="manifest.name" value="${ivy.module}" />
-        <property name="manifest.version" value="${ivy.revision}" />
-        <property name="application.name" value="${ivy.module}-${ivy.revision}" />
+        <property name="application.name" value="${ivy.module}" />
+        <property name="application.version" value="${ivy.revision}" />
+        <property name="application.file.name" value="${ivy.module}-${ivy.revision}" />
     </target>
 
     <target name="make-jars" depends="fetch-libs">
-        <make-jar srcdir="${src.dir}" jarfile="${application.name}.jar" classpath="compile.classpath" />
-        <make-jar srcdir="${test.dir}" jarfile="${application.name}-tests.jar" classpath="test.classpath" />
+        <make-jar srcdir="${src.dir}" jarfile="${application.file.name}.jar" classpath="compile.classpath" />
+        <make-jar srcdir="${test.dir}" jarfile="${application.file.name}-tests.jar" classpath="test.classpath" />
     </target>
 
     <target name="run-tests" depends="make-jars" unless="skip.tests"
@@ -107,11 +107,11 @@
 
     <target name="make-sources-jar">
         <mkdir dir="${compile.dir}" />
-        <jar destfile="${compile.dir}/${application.name}-sources.jar" basedir="${src.dir}">
+        <jar destfile="${compile.dir}/${application.file.name}-sources.jar" basedir="${src.dir}">
             <metainf dir="${basedir}" includes="LICENSE" />
             <manifest>
-                <attribute name="Implementation-Title" value="${manifest.name}" />
-                <attribute name="Implementation-Version" value="${manifest.version}" />
+                <attribute name="Implementation-Title" value="${application.name}" />
+                <attribute name="Implementation-Version" value="${application.version}" />
             </manifest>
         </jar>
     </target>
@@ -119,13 +119,13 @@
     <target name="make-javadoc-jar" depends="fetch-libs">
         <mkdir dir="${compile.dir}/javadoc" />
         <javadoc sourcepath="${src.dir}" destdir="${compile.dir}/javadoc" classpathref="compile.classpath"
-                 windowtitle="${application.name}" doctitle="${application.name}"
+                 windowtitle="${application.file.name}" doctitle="${application.file.name}"
                  footer="Copyright &#169; 2010, Thomas Czarniecki" />
-        <jar destfile="${compile.dir}/${application.name}-javadoc.jar" basedir="${compile.dir}/javadoc">
+        <jar destfile="${compile.dir}/${application.file.name}-javadoc.jar" basedir="${compile.dir}/javadoc">
             <metainf dir="${basedir}" includes="LICENSE" />
             <manifest>
-                <attribute name="Implementation-Title" value="${manifest.name}" />
-                <attribute name="Implementation-Version" value="${manifest.version}" />
+                <attribute name="Implementation-Title" value="${application.name}" />
+                <attribute name="Implementation-Version" value="${application.version}" />
             </manifest>
         </jar>
         <delete dir="${compile.dir}/javadoc" />
@@ -142,12 +142,12 @@
     </target>
 
     <target name="make-zip">
-        <zip destfile="${build.dir}/${application.name}.zip">
-            <zipfileset prefix="${application.name}" dir="${basedir}">
+        <zip destfile="${build.dir}/${application.file.name}.zip">
+            <zipfileset prefix="${application.file.name}" dir="${basedir}">
                 <include name="README" />
                 <include name="LICENSE" />
             </zipfileset>
-            <zipfileset prefix="${application.name}" dir="${compile.dir}">
+            <zipfileset prefix="${application.file.name}" dir="${compile.dir}">
                 <exclude name="*-tests.jar" />
             </zipfileset>
         </zip>
@@ -191,14 +191,14 @@
     </target>
 
     <target name="publish-build" depends="build" description="Publish build to local ivy repository.">
-        <copy file="${compile.dir}/${application.name}.jar"
-              tofile="${build.dir}/publish/jar/${manifest.name}.jar"
+        <copy file="${compile.dir}/${application.file.name}.jar"
+              tofile="${build.dir}/publish/jar/${application.name}.jar"
               overwrite="yes" />
-        <copy file="${compile.dir}/${application.name}-sources.jar"
-              tofile="${build.dir}/publish/source/${manifest.name}.jar"
+        <copy file="${compile.dir}/${application.file.name}-sources.jar"
+              tofile="${build.dir}/publish/source/${application.name}.jar"
               overwrite="yes" />
-        <copy file="${compile.dir}/${application.name}-javadoc.jar"
-              tofile="${build.dir}/publish/javadoc/${manifest.name}.jar"
+        <copy file="${compile.dir}/${application.file.name}-javadoc.jar"
+              tofile="${build.dir}/publish/javadoc/${application.name}.jar"
               overwrite="yes" />
         <ivy:publish resolver="local" overwrite="yes">
             <ivy:artifacts pattern="${build.dir}/publish/[type]/[artifact].[ext]" />
