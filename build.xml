@@ -43,8 +43,17 @@
             depends="clean,run-tests,check-tests,make-sources-jar,make-javadoc-jar,make-pom,make-zip"
             description="Build JARs, run unit tests and create distributable bundles." />
 
+    <target name="ci-build" depends="git-revision,build" description="Target for CI build server." />
+
     <target name="clean">
         <delete dir="${build.dir}" />
+    </target>
+
+    <target name="git-revision" unless="use.ivy.version">
+        <exec executable="git" dir="${basedir}" failonerror="yes" outputproperty="application.version">
+            <arg value="rev-parse" />
+            <arg value="HEAD" />
+        </exec>
     </target>
 
     <target name="fetch-libs" description="Fetch third-party libraries.">
@@ -216,7 +225,7 @@
         </sequential>
     </macrodef>
 
-    <target name="artifact-bundle" depends="build" description="Create staging bundle for Sonatype">
+    <target name="artifact-bundle" depends="build" description="Create staging bundle for Sonatype.">
         <gpg dir="${compile.dir}" file="pom.xml" />
         <gpg dir="${compile.dir}" file="${application.file.name}.jar" />
         <gpg dir="${compile.dir}" file="${application.file.name}-sources.jar" />
