@@ -40,7 +40,7 @@
     </macrodef>
 
     <target name="build"
-            depends="clean,run-tests,check-tests,make-sources-jar,make-javadoc-jar,make-pom,make-zip"
+            depends="clean,check-tests,make-sources-jar,make-javadoc-jar,make-pom,make-zip"
             description="Build JARs, run unit tests and create distributable bundles." />
 
     <target name="ci-build" depends="git-revision,build" description="Target for CI build server." />
@@ -106,7 +106,7 @@
         </junit>
     </target>
 
-    <target name="check-tests" if="tests.failed">
+    <target name="check-tests" depends="run-tests" if="tests.failed">
         <junitreport todir="${report.dir}">
             <fileset dir="${report.dir}" includes="TEST-*.xml" />
             <report todir="${report.dir}/html" />
