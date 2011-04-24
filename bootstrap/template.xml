@@ -29,4 +29,11 @@ ${ivy.pom.license}
         <connection>scm:git:git://github.com/tomcz/spring-stringtemplate.git</connection>
     </scm>
 
+    <developers>
+        <developer>
+            <id>tomcz</id>
+            <name>Tom Czarniecki</name>
+        </developer>
+    </developers>
+
 </project>
