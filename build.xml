@@ -49,7 +49,7 @@
         <delete dir="${build.dir}" />
     </target>
 
-    <target name="git-revision" unless="use.ivy.version">
+    <target name="git-revision">
         <exec executable="git" dir="${basedir}" failonerror="yes" outputproperty="application.version">
             <arg value="rev-parse" />
             <arg value="HEAD" />
