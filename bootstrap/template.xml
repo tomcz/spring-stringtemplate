@@ -25,8 +25,8 @@ ${ivy.pom.license}
     </licenses>
 
     <scm>
-        <connection>scm:git:git://github.com/tomcz/spring-stringtemplate.git</connection>
         <url>git://github.com/tomcz/spring-stringtemplate.git</url>
+        <connection>scm:git:git://github.com/tomcz/spring-stringtemplate.git</connection>
     </scm>
 
 </project>

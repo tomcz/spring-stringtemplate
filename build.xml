@@ -41,7 +41,7 @@
 
     <target name="build"
             depends="clean,run-tests,check-tests,make-sources-jar,make-javadoc-jar,make-pom,make-zip"
-            description="Build JARs, run unit tests and create coverage reports." />
+            description="Build JARs, run unit tests and create distributable bundles." />
 
     <target name="clean">
         <delete dir="${build.dir}" />
@@ -78,11 +78,12 @@
     <target name="run-tests" depends="make-jars" unless="skip.tests"
             description="Run all tests. Use -Dtestcase=SomeTestClassName to specify a single test.">
         <mkdir dir="${report.dir}" />
-        <junit fork="yes" forkmode="once" printsummary="yes" haltonfailure="no" failureproperty="tests.failed">
+        <junit fork="yes" forkmode="once" printsummary="no" haltonfailure="no" failureproperty="tests.failed">
             <classpath>
                 <fileset dir="${compile.dir}" includes="*.jar" />
                 <path refid="test.classpath" />
             </classpath>
+            <formatter type="brief" usefile="no" />
             <formatter type="xml" />
             <batchtest if="testcase" todir="${report.dir}">
                 <fileset dir="${test.dir}">
@@ -203,6 +204,27 @@
         <ivy:publish resolver="local" overwrite="yes">
             <ivy:artifacts pattern="${build.dir}/publish/[type]/[artifact].[ext]" />
         </ivy:publish>
+    </target>
+
+    <macrodef name="gpg">
+        <attribute name="dir" />
+        <attribute name="file" />
+        <sequential>
+            <exec executable="gpg" dir="@{dir}" failonerror="yes">
+                <arg value="-ab" />
+                <arg value="@{file}" />
+            </exec>
+        </sequential>
+    </macrodef>
+
+    <target name="artifact-bundle" depends="build" description="Create staging bundle for Sonatype">
+        <gpg dir="${compile.dir}" file="pom.xml" />
+        <gpg dir="${compile.dir}" file="${application.file.name}.jar" />
+        <gpg dir="${compile.dir}" file="${application.file.name}-sources.jar" />
+        <gpg dir="${compile.dir}" file="${application.file.name}-javadoc.jar" />
+        <jar destfile="${build.dir}/${application.file.name}-release.jar" basedir="${compile.dir}">
+            <exclude name="*-tests.jar" />
+        </jar>
     </target>
 
 </project>
