@@ -67,7 +67,7 @@
         </path>
         <property name="application.name" value="${ivy.module}" />
         <property name="application.version" value="${ivy.revision}" />
-        <property name="application.file.name" value="${ivy.module}-${ivy.revision}" />
+        <property name="application.file.name" value="${application.name}-${application.version}" />
     </target>
 
     <target name="make-jars" depends="fetch-libs">
