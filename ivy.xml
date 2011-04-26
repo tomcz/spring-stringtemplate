@@ -38,10 +38,8 @@
 
         <dependency org="junit" name="junit" rev="4.8.2" transitive="false" conf="test->default,sources" />
 
-        <dependency org="org.hamcrest" name="hamcrest-all" rev="1.1" transitive="false" conf="test->default,sources" />
-        <dependency org="org.mockito" name="mockito-core" rev="1.8.5" conf="test->default,sources">
-            <exclude name="hamcrest-core" />
-        </dependency>
+        <dependency org="org.mockito" name="mockito-core" rev="1.8.5" transitive="false" conf="test->default,sources" />
+        <dependency org="com.googlecode.lambdaj" name="lambdaj" rev="2.3" conf="test->default,sources" />
 
         <dependency org="rhino" name="js" rev="1.6R5" transitive="false" conf="test->default" />
         <dependency org="httpunit" name="httpunit" rev="1.7" conf="test->default,sources">

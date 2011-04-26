@@ -3,27 +3,23 @@ package com.watchitlater.spring.webapp;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.webapp.WebAppContext;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
+
+import static ch.lambdaj.collection.LambdaCollections.with;
+import static org.hamcrest.Matchers.endsWith;
 
 public class WebServer {
 
-    private Server server;
-    private final int port;
+    private final Server server;
 
     public WebServer(int port) {
-        this.port = port;
+        server = new Server(port);
     }
 
     public WebServer start() throws Exception {
-        System.setProperty("org.mortbay.xml.XmlParser.Validating", "false");
-
         WebAppContext context = new WebAppContext("src/test/webapp", "/stringtemplate");
         context.setConfigurationClasses(removeTagLibConfiguration(context));
 
-        server = new Server(port);
         server.addHandler(context);
         server.start();
 
@@ -31,15 +27,8 @@ public class WebServer {
     }
 
     private String[] removeTagLibConfiguration(WebAppContext context) {
-        List<String> configurationClasses = new ArrayList<String>();
-        Collections.addAll(configurationClasses, context.getConfigurationClasses());
-        Iterator<String> itr = configurationClasses.iterator();
-        while (itr.hasNext()) {
-            if (itr.next().endsWith("TagLibConfiguration")) {
-                itr.remove();
-            }
-        }
-        return configurationClasses.toArray(new String[configurationClasses.size()]);
+        List<String> configuration = with(context.getConfigurationClasses()).remove(endsWith("TagLibConfiguration"));
+        return configuration.toArray(new String[configuration.size()]);
     }
 
     public void stop() {
