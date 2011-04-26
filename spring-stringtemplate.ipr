@@ -150,7 +150,6 @@
         <root url="jar://$PROJECT_DIR$/lib/test/source/httpunit-1.7.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/test/source/junit-4.8.2.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/test/source/jetty-6.1.22.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/test/source/hamcrest-all-1.1.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/test/source/mockito-core-1.8.5.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/test/source/spring-test-3.0.5.RELEASE.jar!/" />
       </SOURCES>
