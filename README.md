@@ -16,3 +16,13 @@ Runtime dependencies:
 - springframework 3.x (required)
 - commons-lang 2.7.7 (required)
 - sitemesh 2.4.1 (optional)
+
+Note: Release 1.5.1 has been uploaded to the Maven Repository so you can fetch it via:
+
+```xml
+<dependency>
+  <groupId>com.watchitlater</groupId>
+	<artifactId>spring-stringtemplate</artifactId>
+	<version>1.5.1</version>
+</dependency>
+```
