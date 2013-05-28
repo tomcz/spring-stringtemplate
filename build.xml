@@ -133,7 +133,7 @@
 
     <target name="make-pom" depends="fetch-libs">
         <mkdir dir="${compile.dir}" />
-        <loadfile srcfile="LICENSE.txt" property="license.text" />
+        <loadfile srcfile="LICENSE" property="license.text" />
         <property name="ivy.pom.license" value="${license.text}" />
         <ivy:makepom ivyfile="ivy.xml"
                      conf="compile,test,provided"
